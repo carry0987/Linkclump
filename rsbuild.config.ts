@@ -55,13 +55,12 @@ export default defineConfig({
     },
 
     environments: {
-        // UI/DOM context: popup, options, content script
+        // UI/DOM context: options page and content script
         web: {
             plugins: [pluginPreact()],
             source: {
                 entry: {
                     // Each entry becomes js/[name].js after build
-                    popup: './src/pages/popup/index.tsx',
                     options: './src/pages/options/index.tsx',
                     content: {
                         import: './src/content/index.tsx',
@@ -72,7 +71,6 @@ export default defineConfig({
             html: {
                 // Pick template by entry name
                 template: ({ entryName }) => {
-                    if (entryName === 'popup') return 'public/popup.html';
                     if (entryName === 'options') return 'public/options.html';
                     // Return undefined for entries that shouldn't emit HTML
                     return undefined;

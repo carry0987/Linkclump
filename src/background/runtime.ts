@@ -5,7 +5,7 @@ chrome.runtime.onStartup.addListener(() => {
     logger.info('[background] Browser startup');
 });
 
-/** Check if URL should disable popup/action */
+/** Check if URL should disable action */
 const isRestrictedUrl = (raw?: string | null) => {
     if (!raw) return true;
 
@@ -31,16 +31,12 @@ const isRestrictedUrl = (raw?: string | null) => {
     return true;
 };
 
-/** Apply enable/disable + popup per tab */
+/** Apply enable/disable per tab */
 const applyActionPolicy = async (tabId: number, url?: string | null) => {
     if (isRestrictedUrl(url)) {
-        // Option A: completely disable the action
         await chrome.action.disable(tabId);
-        // Option B (alternative): keep enabled but remove popup
-        // await chrome.action.setPopup({ tabId, popup: '' });
     } else {
         await chrome.action.enable(tabId);
-        await chrome.action.setPopup({ tabId, popup: 'popup.html' });
     }
 };
 
@@ -62,7 +58,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
 });
 
-// On install: set default popup for all existing tabs
+// On install: apply policy for all existing tabs
 chrome.runtime.onInstalled.addListener(async () => {
     logger.info('[background] Extension installed');
     const tabs = await chrome.tabs.query({});

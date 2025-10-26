@@ -1,3 +1,5 @@
+import type { Action, Settings } from './config';
+
 export const FLAGS = {
     ENABLE_OVERLAY: true
 } as const;
@@ -8,17 +10,26 @@ export const ALARMS = {
 } as const;
 
 export enum MSG {
-    CHANGE_BG = 'CHANGE_BG'
+    LINKCLUMP_ACTIVATE = 'LINKCLUMP_ACTIVATE',
+    LINKCLUMP_INIT = 'LINKCLUMP_INIT',
+    LINKCLUMP_UPDATE = 'LINKCLUMP_UPDATE'
 }
 
 export const MESSAGE_SPEC = {
-    // example: provide strict typing for CHANGE_BG
-    [MSG.CHANGE_BG]: {
-        req: {} as { color: string },
-        res: {} as { ok: boolean } // optional
-    }
+    [MSG.LINKCLUMP_ACTIVATE]: {
+        req: {} as { urls: Array<{ url: string; title: string }>; setting: any },
+        res: {} as { ok: boolean }
+    },
 
-    // add more overrides here...
+    [MSG.LINKCLUMP_INIT]: {
+        req: {} as Record<string, never>,
+        res: {} as { actions: Record<string, Action>; blocked: string[] }
+    },
+
+    [MSG.LINKCLUMP_UPDATE]: {
+        req: {} as { settings: any },
+        res: {} as { ok: boolean }
+    }
 } as const;
 
 export const RESTRICTED = {
@@ -32,3 +43,12 @@ export const RESTRICTED = {
 } as const;
 
 export type RestrictedScheme = (typeof RESTRICTED.schemes)[number];
+
+// Linkclump constants
+export const Z_INDEX = 2147483647;
+export const OS_WIN = 1;
+export const OS_LINUX = 0;
+export const OS_MAC = 2;
+export const LEFT_BUTTON = 0;
+export const END_KEY = 'End';
+export const HOME_KEY = 'Home';

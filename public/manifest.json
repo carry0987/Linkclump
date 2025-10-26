@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Chrome Extension Starter",
-  "description": "Chrome Extension Starter, using TypeScript, Preact, TailwindCSS, Vitest and RSBuild.",
+  "name": "Linkclump",
+  "description": "Lets you open, copy or bookmark multiple links at the same time.",
   "version": "1.0",
   "options_ui": {
     "page": "options.html",
@@ -13,9 +13,7 @@
       "32": "icons/icon32.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
-    },
-    "default_title": "Open Extension Popup",
-    "default_popup": "popup.html"
+    }
   },
   "icons": {
     "16": "icons/icon16.png",
@@ -26,14 +24,16 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["static/js/content.js"]
+      "js": ["static/js/content.js"],
+      "run_at": "document_end",
+      "all_frames": true
     }
   ],
   "background": {
     "service_worker": "static/js/background.js",
     "type": "module"
   },
-  "permissions": ["storage", "tabs", "alarms"],
+  "permissions": ["storage", "bookmarks", "clipboardWrite"],
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {

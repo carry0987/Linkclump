@@ -1,4 +1,5 @@
 import type { MSG, MESSAGE_SPEC } from '@/shared/constants';
+import type { Settings } from './config';
 
 // Build a default message map from MSG keys
 export type InferMessageMap<T extends Record<string, string>> = {
@@ -22,25 +23,25 @@ export type Message<T extends string = string, P = unknown> = {
 
 // Typed storage schema used by createTypedStorage
 export interface StorageSchema {
-    local: {
-        // example keys; adjust to your extension needs
-        darkMode: boolean;
-        username: string;
-    };
     sync: {
-        settings: unknown; // Settings object from setting.ts
+        settings: Settings;
         version: string;
     };
-    // Managed storage is policy-controlled and read-only
-    managed: {
-        // example keys; adjust to your enterprise policy schema
-        orgEnabled: boolean;
-        allowedHosts: string[];
-    };
-    // Session storage is ephemeral (lives with the service worker session)
-    session: {
-        // example keys; adjust to your extension needs
-        lastVisited: string | null;
-        tempToken: string | null;
-    };
+}
+
+// Link-related types
+export interface Link {
+    url: string;
+    title: string;
+}
+
+export interface LinkElement extends HTMLAnchorElement {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    width: number;
+    height: number;
+    box: HTMLElement | null;
+    important: boolean;
 }

@@ -1,112 +1,246 @@
-import { settingsManager, type Settings } from '@/shared/config';
+import type { Settings, Action, ActionType } from '@/shared/config';
+import { settingsManager, DEFAULT_SETTINGS } from '@/shared/config';
+import { bus } from '@/shared/lib/messaging';
+import { MSG } from '@/shared/constants';
 import { render } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 // Import styles
 import '@/shared/styles.css';
 
-const Options = () => {
-    const [settings, setSettings] = useState<Settings | null>(null);
-    const [status, setStatus] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [isLatestVersion, setIsLatestVersion] = useState(true);
+// Helper function to get available keys based on mouse button and OS
+const getAvailableKeys = (mouseButton: number) => {
+    const keys: Record<string, string> = {};
+
+    // Modifier keys
+    keys['Shift'] = 'Shift';
+    keys['Control'] = 'Ctrl';
+
+    // Note: On Linux, Alt is typically reserved for window management
+    // We'll include it for now, but you may want to detect OS if needed
+    keys['Alt'] = 'Alt';
+
+    // Allow no key for left button and on Windows for right button
+    // For simplicity, we'll allow no key for all mouse buttons
+    keys[''] = '(None)';
+
+    // Add A-Z keys (a-z)
+    for (let i = 0; i < 26; i++) {
+        const char = String.fromCharCode(97 + i); // lowercase
+        keys[char] = char.toUpperCase();
+    }
+
+    return keys;
+};
+
+const OptionsPage = () => {
+    const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+    const [saved, setSaved] = useState(false);
 
     useEffect(() => {
-        (async () => {
+        const loadSettings = async () => {
             try {
-                // Ensure settings are initialized
-                await settingsManager.update();
-                const loadedSettings = await settingsManager.load();
-                const latest = await settingsManager.isLatest();
-                setSettings(loadedSettings);
-                setIsLatestVersion(latest);
+                const result = await settingsManager.load();
+                if (result) {
+                    setSettings(result);
+                }
             } catch (error) {
                 console.error('Failed to load settings:', error);
-                setStatus('❌ Failed to load settings');
-            } finally {
-                setLoading(false);
             }
-        })();
+        };
+
+        loadSettings();
     }, []);
 
-    const saveOptions = async () => {
-        if (!settings) return;
+    const handleSave = async () => {
+        await settingsManager.save(settings);
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
 
-        try {
-            await settingsManager.save(settings);
-            setStatus('✅ Options saved');
-            const id = window.setTimeout(() => setStatus(''), 1200);
-            void id;
-        } catch (error) {
-            console.error('Failed to save settings:', error);
-            setStatus('❌ Failed to save settings');
-        }
+        // Notify all tabs about settings update
+        await bus.sendToBackground(MSG.LINKCLUMP_UPDATE, { settings });
     };
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-surface dark:bg-(--color-surface-dark) text-gray-900 dark:text-gray-100 flex items-center justify-center p-6">
-                <div className="text-center">Loading...</div>
-            </div>
-        );
-    }
+    const addAction = () => {
+        const newId = String(Date.now());
+        const newAction: Action = {
+            mouse: 0,
+            key: 'z',
+            action: 'tabs' as ActionType,
+            color: '#FFA500',
+            options: {
+                smart: false,
+                ignore: [0],
+                delay: 0,
+                close: 0,
+                block: true,
+                reverse: false,
+                end: false
+            }
+        };
 
-    if (!settings) {
-        return (
-            <div className="min-h-screen bg-surface dark:bg-(--color-surface-dark) text-gray-900 dark:text-gray-100 flex items-center justify-center p-6">
-                <div className="text-center text-red-500">Failed to load settings</div>
-            </div>
-        );
-    }
+        setSettings({
+            ...settings,
+            actions: {
+                ...settings.actions,
+                [newId]: newAction
+            }
+        });
+    };
+
+    const deleteAction = (id: string) => {
+        const newActions = { ...settings.actions };
+        delete newActions[id];
+        setSettings({ ...settings, actions: newActions });
+    };
 
     return (
-        <div className="min-h-screen bg-surface dark:bg-(--color-surface-dark) text-gray-900 dark:text-gray-100 flex items-center justify-center p-6">
-            <div className="w-full max-w-md card space-y-6">
-                <header>
-                    <h1 className="card-header">Extension Options</h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Manage your extension preferences. Version: {isLatestVersion ? '✅ Latest' : '⚠️ Needs update'}
-                    </p>
-                </header>
+        <div className="min-h-screen bg-gray-50 p-8">
+            <div className="max-w-4xl mx-auto">
+                <h1 className="text-3xl font-bold mb-8">Linkclump Settings</h1>
 
-                <section className="space-y-4">
-                    <div>
-                        <label className="block mb-1 text-sm font-medium text-gray-600 dark:text-gray-300">
-                            Favorite color
-                        </label>
-                        <select
-                            className="input"
-                            value={settings.favoriteColor}
-                            onChange={(e) => setSettings({ ...settings, favoriteColor: e.currentTarget.value })}>
-                            <option value="red">Red</option>
-                            <option value="green">Green</option>
-                            <option value="blue">Blue</option>
-                            <option value="yellow">Yellow</option>
-                            <option value="purple">Purple</option>
-                            <option value="orange">Orange</option>
-                        </select>
-                    </div>
+                <div className="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 className="text-xl font-semibold mb-4">Actions</h2>
 
-                    <label className="flex items-center gap-2 text-sm">
-                        <input
-                            type="checkbox"
-                            checked={settings.likesColor}
-                            onChange={(e) => setSettings({ ...settings, likesColor: e.currentTarget.checked })}
-                            className="size-4 accent-primary"
-                        />
-                        <span>I like colors.</span>
-                    </label>
-                </section>
+                    {Object.entries(settings.actions).map(([id, action]) => (
+                        <div key={id} className="border rounded p-4 mb-4">
+                            <div className="flex justify-between items-start mb-4">
+                                <h3 className="font-semibold">Action {id}</h3>
+                                <button onClick={() => deleteAction(id)} className="text-red-600 hover:text-red-800">
+                                    Delete
+                                </button>
+                            </div>
 
-                <footer className="flex justify-end items-center gap-3 pt-2">
-                    <div className="text-sm text-green-600 dark:text-green-400 h-5">{status}</div>
-                    <button onClick={saveOptions} className="btn-primary">
-                        Save
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Mouse Button</label>
+                                    <select
+                                        value={action.mouse}
+                                        onChange={(e) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].mouse = parseInt((e.target as HTMLSelectElement).value);
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        className="w-full border rounded px-3 py-2">
+                                        <option value="0">Left</option>
+                                        <option value="1">Middle</option>
+                                        <option value="2">Right</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Modifier Key</label>
+                                    <select
+                                        value={action.key}
+                                        onChange={(e) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].key = (e.target as HTMLSelectElement).value;
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        className="w-full border rounded px-3 py-2">
+                                        {Object.entries(getAvailableKeys(action.mouse)).map(([key, keyName]) => (
+                                            <option key={key} value={key}>
+                                                {keyName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Action</label>
+                                    <select
+                                        value={action.action}
+                                        onChange={(e) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].action = (e.target as HTMLSelectElement).value as any;
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        className="w-full border rounded px-3 py-2">
+                                        <option value="tabs">Open as Tabs</option>
+                                        <option value="window">Open in New Window</option>
+                                        <option value="copy">Copy to Clipboard</option>
+                                        <option value="bookmark">Bookmark</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Color</label>
+                                    <input
+                                        type="color"
+                                        value={action.color}
+                                        onChange={(e) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].color = (e.target as HTMLInputElement).value;
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        className="w-full border rounded px-3 py-2"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mt-4">
+                                <label className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        checked={action.options.block}
+                                        onChange={(e) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].options.block = (e.target as HTMLInputElement).checked;
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        className="mr-2"
+                                    />
+                                    <span className="text-sm">Block duplicate links</span>
+                                </label>
+
+                                <label className="flex items-center mt-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={action.options.reverse}
+                                        onChange={(e) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].options.reverse = (e.target as HTMLInputElement).checked;
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        className="mr-2"
+                                    />
+                                    <span className="text-sm">Reverse order</span>
+                                </label>
+                            </div>
+                        </div>
+                    ))}
+
+                    <button
+                        onClick={addAction}
+                        className="w-full bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">
+                        Add Action
                     </button>
-                </footer>
+                </div>
+
+                <div className="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 className="text-xl font-semibold mb-4">Blocked Sites</h2>
+                    <textarea
+                        value={settings.blocked.join('\n')}
+                        onChange={(e) => {
+                            const blocked = (e.target as HTMLTextAreaElement).value.split('\n').filter((s) => s.trim());
+                            setSettings({ ...settings, blocked });
+                        }}
+                        placeholder="Enter one pattern per line (regex supported)"
+                        className="w-full border rounded px-3 py-2 h-32"
+                    />
+                </div>
+
+                <div className="flex justify-end gap-4">
+                    {saved && <span className="text-green-600 self-center">Settings saved!</span>}
+                    <button
+                        onClick={handleSave}
+                        className="bg-green-500 text-white rounded px-6 py-2 hover:bg-green-600">
+                        Save Settings
+                    </button>
+                </div>
             </div>
         </div>
     );
 };
 
-render(<Options />, document.getElementById('root')!);
+render(<OptionsPage />, document.getElementById('root')!);

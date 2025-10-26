@@ -248,9 +248,9 @@ describe('Messaging System', () => {
                 // Simulate no response (callback not called)
             });
 
-            await expect(
-                messenger.sendToBackground('PING', { message: 'test' }, { timeoutMs: 100 })
-            ).rejects.toThrow('Message timeout');
+            await expect(messenger.sendToBackground('PING', { message: 'test' }, { timeoutMs: 100 })).rejects.toThrow(
+                'Message timeout'
+            );
         });
 
         it('should clear timeout on successful response', async () => {
@@ -265,7 +265,7 @@ describe('Messaging System', () => {
             });
 
             const promise = messenger.sendToBackground('PING', { message: 'test' }, { timeoutMs: 200 });
-            
+
             vi.advanceTimersByTime(50);
             await promise;
 

@@ -1,10 +1,21 @@
-# Chrome Extension Starter
+# Linkclump
 
-![build](https://github.com/carry0987/Chrome-Extension-Starter/actions/workflows/build.yml/badge.svg)
-![CI](https://github.com/carry0987/Chrome-Extension-Starter/actions/workflows/ci.yml/badge.svg)
+![build](https://github.com/carry0987/Linkclump/actions/workflows/build.yml/badge.svg)
+![CI](https://github.com/carry0987/Linkclump/actions/workflows/ci.yml/badge.svg)
 
-A modern **Chrome Extension Starter Template** built with **TypeScript**, **Preact**, **TailwindCSS**, **RSBuild**, and **Vitest** — fully compatible with **Manifest V3**.
-Designed for fast development, clean architecture, and strongly typed communication between extension modules.
+**Linkclump** is a powerful Chrome extension that lets you **open**, **copy**, or **bookmark multiple links at once** by drawing a selection box around them. Built with modern web technologies and fully compatible with **Manifest V3**.
+
+---
+
+## ✨ Features
+
+* **🖱️ Multi-Link Selection** — Draw a selection box with mouse + keyboard to select multiple links
+* **🎯 Flexible Actions** — Open in tabs, new window, copy URLs, or create bookmarks
+* **⚙️ Customizable Shortcuts** — Configure mouse button + modifier key combinations
+* **🎨 Visual Feedback** — Color-coded selection boxes for different actions
+* **🔧 Advanced Options** — Smart selection, link filtering, tab positioning, delays, and more
+* **🚫 Site Blocking** — Define URL patterns to disable Linkclump on specific sites
+* **💾 Sync Settings** — Your configurations sync across Chrome instances
 
 ---
 
@@ -15,151 +26,75 @@ Designed for fast development, clean architecture, and strongly typed communicat
 
 ---
 
-## 🧩 Includes the Following
-
-### 🏗️ Core Stack
+## 🏗️ Tech Stack
 
 * **TypeScript (ESNext)** — Strong typing & modern syntax
-* **RSBuild** — High-performance bundler optimized for modern web extensions
-* **TailwindCSS v4** — Utility-first CSS framework for responsive design
+* **RSBuild** — High-performance bundler optimized for web extensions
+* **TailwindCSS v4** — Utility-first CSS framework
 * **Preact** — Lightweight React-compatible UI framework
 * **Vitest** — Fast unit testing powered by Vite
+* **Chrome Extension Manifest V3** — Modern extension architecture
 
 ---
 
-### ⚙️ Extension Architecture
+## 🎯 How It Works
 
-* **Background (Service Worker)**
+### 1. **Link Selection**
 
-  * Lifecycle control (`onInstalled`, `onStartup`)
-  * Enforces tab-level action policies
-  * Centralized event and permission management
+* Hold a **modifier key** (Shift/Ctrl/Alt) or use configured key
+* Click and drag with **configured mouse button** (left/middle/right)
+* A colored selection box appears around selected links
+* Release to trigger the configured action
 
-* **Content Scripts**
+### 2. **Available Actions**
 
-  * Injected into web pages for DOM manipulation and UI overlays
-  * Listens for typed messages from popup or background
+* **Open in Tabs** — Open all selected links in new tabs
+* **Open in Window** — Open links in a new window
+* **Copy to Clipboard** — Copy URLs in various formats (plain, markdown, HTML, etc.)
+* **Create Bookmarks** — Add all links to a new bookmark folder
 
-* **Popup & Options Pages**
+### 3. **Configuration Options**
 
-  * Built with Preact + Tailwind
-  * Share logic and style via the `shared/` module
-
-* **Shared Library (`src/shared/lib`)**
-
-  * `messaging.ts` → Unified **typed message bus** with async support and auto-cleanup
-  * `storage.ts` → **Typed Chrome Storage API** supporting `local`, `sync`, `managed`, and `session`
-  * `logger.ts` → Lightweight structured logger
-  * `dom.ts` → Safe DOM mounting helpers
-
-* **Constants & Types**
-
-  * `constants.ts` → Global flags, restricted URL definitions, message enums
-  * `types.d.ts` → Shared type definitions for storage schema and messaging
-
-* **Tests (`__tests__/`)**
-
-  * `messaging.test.ts` → Verifies async message bridge logic
-  * Example tests for storage utilities
+Each action can be customized with:
+* **Mouse button**: Left (0), Middle (1), or Right (2)
+* **Modifier key**: Shift, Ctrl, Alt, A-Z, or None
+* **Selection color**: Visual indicator for different actions
+* **Advanced options**:
+  * Smart selection mode
+  * Link filtering (include/exclude patterns)
+  * Tab delay and positioning
+  * Auto-close source tab
+  * Block duplicate URLs
+  * Reverse link order
 
 ---
 
-### 🧠 Example Implementations
+## 🚀 Quick Start
 
-* **🔗 Typed Messaging System (`messaging.ts`)**
-  Provides a unified API for cross-context communication:
-
-  ```ts
-  // popup/background → content
-  await bus.sendToActive(MSG.CHANGE_BG, { color: '#0ea5e9' });
-
-  // content → listener
-  const off = bus.on(MSG.CHANGE_BG, (payload) => {
-    document.body.style.backgroundColor = payload.color;
-    return { ok: true };
-  });
-  ```
-
-  * `bus.sendToActive` / `bus.sendToTab`: Type-safe messaging with timeout support
-  * `bus.on`: Strongly typed listener with automatic cleanup
-
-* **💾 Typed Chrome Storage (`storage.ts`)**
-  Generic, schema-driven access layer:
-
-  ```ts
-  import { kv } from '@/shared/lib/storage';
-
-  // Set and get typed values
-  await kv.set('sync', 'theme', 'dark');
-  const theme = await kv.get('sync', 'theme', 'system');
-
-  // Managed storage (read-only)
-  const orgPolicy = await kv.get('managed', 'orgEnabled', false);
-  ```
-
-* **🧩 Overlay Demo (Content Script)**
-
-  * Listens to `CHANGE_BG`
-  * Dynamically updates page background
-  * Displays a Preact-based notification overlay
-
----
-
-## 📁 Project Structure
-
-```
-src/
-├── background/      # Background service worker logic
-│   ├── alarms.ts    # Optional periodic jobs
-│   ├── index.ts     # Main background entry
-│   └── runtime.ts   # Lifecycle + tab action policies
-├── content/         # Scripts injected into web pages
-│   ├── index.tsx    # Overlay UI (Preact)
-│   └── bridge.ts    # Messaging bridge
-├── pages/           # Extension UIs (Popup & Options)
-│   ├── popup/
-│   │   └── index.tsx
-│   └── options/
-│       └── index.tsx
-└── shared/          # Common logic and utilities
-    ├── lib/
-    │   ├── messaging.ts   # Typed messaging system
-    │   ├── storage.ts     # Typed Chrome storage API
-    │   ├── logger.ts      # Console wrapper
-    │   └── dom.ts         # DOM helpers
-    ├── constants.ts       # Flags & restricted schemes
-    ├── types.d.ts         # Shared type declarations
-    └── styles.css         # Tailwind entrypoint
-```
-
----
-
-## ⚡ Setup
+### Installation
 
 ```bash
+# Install dependencies
 pnpm install
 ```
 
----
-
-## 🧑‍💻 Development Mode (Watch + Hot Reload)
+### Development
 
 ```bash
+# Start development mode with watch
 pnpm run dev
 ```
 
-* RSBuild will watch file changes and rebuild incrementally.
-* Open `chrome://extensions/` → Enable **Developer Mode** → Load `dist/`
-* Every rebuild automatically updates your extension when reloaded.
+1. Open **chrome://extensions/** in Chrome
+2. Enable **Developer mode**
+3. Click **Load unpacked**
+4. Select the **`dist/`** directory
+5. Make changes — the extension rebuilds automatically
 
-> Tip: Use `chrome.runtime.reload()` or click “Reload” in the Extensions page after each build.
-
----
-
-## 🧪 Run Unit Tests (Vitest)
+### Testing
 
 ```bash
-# Run tests once
+# Run unit tests
 pnpm run test
 
 # Run tests in watch mode
@@ -169,32 +104,74 @@ pnpm run test:watch
 pnpm run test:cov
 ```
 
----
-
-## 🚀 Build for Production
+### Production Build
 
 ```bash
+# Build for production
 pnpm run build
 ```
 
-Outputs optimized files to the `dist/` folder, ready for packaging or loading into Chrome.
+The optimized extension will be output to the `dist/` folder.
 
 ---
 
-## 🧭 Load Extension into Chrome
+## 🔧 Configuration
 
-1. Run the build command:
+### Settings Page
 
-   ```bash
-   pnpm run build
-   ```
-2. Open **chrome://extensions/**
-3. Enable **Developer mode**
-4. Click **Load unpacked**
-5. Select the generated **`dist/`** directory
+1. Click the extension icon or right-click and select **Options**
+2. Configure actions with different mouse + key combinations:
+   * Choose mouse button (Left/Middle/Right)
+   * Select modifier key or letter key
+   * Pick action type (Tabs/Window/Copy/Bookmark)
+   * Set color for visual feedback
+   * Configure advanced options per action
+3. Add blocked site patterns (regex supported)
+4. Click **Save Settings**
+
+### Default Configuration
+
+By default, **Left Click + Z** key opens links in new tabs.
+
+### Message Flow
+
+```
+Content Script (user draws selection)
+    ↓ MSG.LINKCLUMP_ACTIVATE
+Background Worker (processes action)
+    ↓ chrome.tabs.create / chrome.bookmarks / etc.
+Action Executed
+```
+
+---
+
+## 🔒 Permissions
+
+* **storage** — Save user settings and sync across devices
+* **bookmarks** — Create bookmark folders
+* **clipboardWrite** — Copy links to clipboard
+* **host_permissions: `<all_urls>`** — Inject content script on all sites
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
 ## 📜 License
 
 [MIT](LICENSE) © 2025 carry0987
+
+---
+
+## 🙏 Acknowledgments
+
+Inspired by the original Linkclump extension, rebuilt from scratch with modern tooling and architecture.
