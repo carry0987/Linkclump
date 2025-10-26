@@ -1,0 +1,53 @@
+{
+  "name": "chrome-extension-starter",
+  "version": "1.0.0",
+  "description": "Chrome Extension Starter, using TypeScript, Preact, TailwindCSS, Vitest and RSBuild.",
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build",
+    "build:prod": "rsbuild build --mode=production",
+    "build:watch": "rsbuild build --watch",
+    "lint": "prettier --write \"src/**/*.{ts,tsx,css}\" \"__tests__/**/*.{ts,tsx}\" \"public/**/*.{json,css,html}\"",
+    "test": "vitest run",
+    "test:cov": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carry0987/Chrome-Extension-Starter.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "typescript",
+    "preact",
+    "tailwindcss",
+    "vitest",
+    "rsbuild"
+  ],
+  "author": "carry0987",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/carry0987/Chrome-Extension-Starter/issues"
+  },
+  "homepage": "https://github.com/carry0987/Chrome-Extension-Starter#readme",
+  "dependencies": {
+    "preact": "^10.27.2"
+  },
+  "devDependencies": {
+    "@carry0987/utils": "^3.9.1",
+    "@rsbuild/core": "^1.5.17",
+    "@rsbuild/plugin-preact": "^1.5.2",
+    "@tailwindcss/postcss": "^4.1.16",
+    "@testing-library/preact": "^3.2.4",
+    "@types/chrome": "^0.1.24",
+    "@types/node": "^24.9.1",
+    "@vitest/coverage-v8": "4.0.3",
+    "jsdom": "^27.0.1",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.16",
+    "vitest": "^4.0.3"
+  }
+}

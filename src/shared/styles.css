@@ -1,0 +1,91 @@
+/* Tailwind v4 entry point */
+@import 'tailwindcss';
+
+/* 🎨 Global theme definitions */
+@theme {
+    /* 🌈 Theme colors (automatically generates --color-* variables) */
+    --color-primary: #2563eb; /* blue-600 */
+    --color-primary-light: #3b82f6; /* blue-500 */
+    --color-secondary: #7c3aed; /* violet-600 */
+    --color-surface: #f9fafb; /* light background */
+    --color-surface-dark: #111827; /* dark background */
+    --color-text-dark: #111827;
+    --color-text-light: #f3f4f6;
+
+    /* ✍️ Font system */
+    --font-sans: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* 🧱 Base border radius */
+    --radius-md: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+}
+
+/* 🌗 Global theme and dark mode support */
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        background-color: var(--color-surface);
+        color: var(--color-text-dark);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        html {
+            background-color: var(--color-surface-dark);
+            color: var(--color-text-light);
+        }
+    }
+
+    body {
+        @apply antialiased;
+    }
+}
+
+/* 🧩 Reusable component styles */
+@layer components {
+    .btn,
+    .btn-primary,
+    .btn-secondary {
+        /* base utilities */
+        @apply inline-flex items-center justify-center font-medium rounded-xl transition-colors duration-150 focus:outline-none;
+        @apply px-3 py-1; /* keep spacing together */
+    }
+
+    .btn-primary {
+        @apply text-white;
+        background-color: var(--color-primary); /* use CSS var instead of arbitrary value */
+    }
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+
+    .btn-secondary {
+        @apply text-gray-800;
+        background-color: #e5e7eb; /* gray-200 */
+    }
+    .btn-secondary:hover {
+        background-color: #d1d5db;
+    } /* gray-300 */
+    @media (prefers-color-scheme: dark) {
+        .btn-secondary {
+            @apply text-gray-100;
+            background-color: #374151; /* gray-700 */
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        } /* gray-600 */
+    }
+
+    .card {
+        @apply rounded-2xl shadow-xl bg-white dark:bg-gray-800 p-6;
+    }
+
+    .card-header {
+        @apply text-lg font-semibold mb-2;
+    }
+
+    .input {
+        @apply w-full rounded-xl border border-gray-300 dark:border-gray-700 px-3 py-2 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary;
+    }
+}

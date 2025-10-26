@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ESNext",
+        "moduleResolution": "Bundler",
+        "esModuleInterop": true,
+        "importHelpers": true,
+        "strict": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "preact",
+        "outDir": "dist",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "types": ["chrome"]
+    },
+    "include": [
+        "src/**/*",
+        "__tests__/**/*",
+        "rsbuild.config.ts",
+        "vitest.config.ts",
+        "public/manifest.json"
+    ],
+    "exclude": ["node_modules", "dist", "**/__snapshots__/**/*"]
+}
