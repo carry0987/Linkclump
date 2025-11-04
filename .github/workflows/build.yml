@@ -8,22 +8,45 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  check-commit:
     runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.check.outputs.status }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Check commit message version format
+        id: check
+        run: |
+          echo "status=false" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event.head_commit.message }}" =~ ^Bump\ to\ (v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "status=true" >> $GITHUB_OUTPUT
+            echo "version=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          fi
 
+  build:
+    needs: check-commit
+    if: needs.check-commit.outputs.status == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        node-version: [24]
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: latest
 
-      - name: Setup Node.js
+      - name: Setup Node.js v${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -31,9 +54,20 @@ jobs:
       - name: Build extension
         run: pnpm run build:prod
 
-      - name: Upload extension artifact
-        uses: actions/upload-artifact@v5
+      - name: Create extension archive
+        run: |
+          cd dist
+          zip -r ../linkclump-${{ needs.check-commit.outputs.version }}.zip .
+          cd ..
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
         with:
-          name: chrome-extension
-          path: dist/*
-          retention-days: 30
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ needs.check-commit.outputs.version }}
+          name: ${{ needs.check-commit.outputs.version }}
+          body: |
+            Bump to version ${{ needs.check-commit.outputs.version }}
+          artifacts: linkclump-${{ needs.check-commit.outputs.version }}.zip
+          draft: false
+          omitDraftDuringUpdate: true
