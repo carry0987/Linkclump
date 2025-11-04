@@ -418,17 +418,19 @@ class Core {
         }
 
         const pageLinks = document.links;
-        const re1 = /^javascript:/i;
+
+        // Create filter regex
+        const jsProtocolPattern = new RegExp('^javascript:', 'i');
         const ignorePattern =
             action.options.ignore && action.options.ignore.length > 1
                 ? new RegExp(action.options.ignore.slice(1).join('|'), 'i')
                 : null;
-        const re3 = /^H\d$/;
+        const headingTagPattern = new RegExp('^H\\d$');
 
         for (let i = 0; i < pageLinks.length; i++) {
             const link = pageLinks[i] as LinkElement;
 
-            if (re1.test(link.href)) continue;
+            if (jsProtocolPattern.test(link.href)) continue;
 
             const href = link.getAttribute('href');
             if (!href || href === '#') continue;
@@ -467,7 +469,7 @@ class Core {
             link.height = height;
             link.box = null;
             link.important =
-                action.options.smart === false && link.parentNode !== null && re3.test(link.parentNode.nodeName);
+                action.options.smart === false && link.parentNode !== null && headingTagPattern.test(link.parentNode.nodeName);
 
             this.links.push(link);
         }
