@@ -1,10 +1,6 @@
 import { logger } from '@/shared/lib/logger';
 import { RESTRICTED } from '@/shared/constants';
 
-chrome.runtime.onStartup.addListener(() => {
-    logger.info('[background] Browser startup');
-});
-
 /** Check if URL should disable action */
 const isRestrictedUrl = (raw?: string | null) => {
     if (!raw) return true;
@@ -39,6 +35,11 @@ const applyActionPolicy = async (tabId: number, url?: string | null) => {
         await chrome.action.enable(tabId);
     }
 };
+
+// On browser startup: log event
+chrome.runtime.onStartup.addListener(() => {
+    logger.info('[background] Browser startup');
+});
 
 // On tab activation: check current tab URL
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {

@@ -25,6 +25,10 @@
 
 /* 🌗 Global theme and dark mode support */
 @layer base {
+    * {
+        font-size: 1rem;
+    }
+
     html {
         font-family: var(--font-sans);
         background-color: var(--color-surface);
@@ -40,53 +44,5 @@
 
     body {
         @apply antialiased;
-    }
-}
-
-/* 🧩 Reusable component styles */
-@layer components {
-    .btn,
-    .btn-primary,
-    .btn-secondary {
-        /* base utilities */
-        @apply inline-flex items-center justify-center font-medium rounded-xl transition-colors duration-150 focus:outline-none;
-        @apply px-3 py-1; /* keep spacing together */
-    }
-
-    .btn-primary {
-        @apply text-white;
-        background-color: var(--color-primary); /* use CSS var instead of arbitrary value */
-    }
-    .btn-primary:hover {
-        opacity: 0.9;
-    }
-
-    .btn-secondary {
-        @apply text-gray-800;
-        background-color: #e5e7eb; /* gray-200 */
-    }
-    .btn-secondary:hover {
-        background-color: #d1d5db;
-    } /* gray-300 */
-    @media (prefers-color-scheme: dark) {
-        .btn-secondary {
-            @apply text-gray-100;
-            background-color: #374151; /* gray-700 */
-        }
-        .btn-secondary:hover {
-            background-color: #4b5563;
-        } /* gray-600 */
-    }
-
-    .card {
-        @apply rounded-2xl shadow-xl bg-white dark:bg-gray-800 p-6;
-    }
-
-    .card-header {
-        @apply text-lg font-semibold mb-2;
-    }
-
-    .input {
-        @apply w-full rounded-xl border border-gray-300 dark:border-gray-700 px-3 py-2 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary;
     }
 }
