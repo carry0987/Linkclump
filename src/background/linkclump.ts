@@ -68,7 +68,7 @@ bus.on(MSG.LINKCLUMP_ACTIVATE, async (payload, sender) => {
 
     switch (setting.action) {
         case 'copy':
-            await handleCopy(urls, setting);
+            await handleCopy(urls, setting, sender.tab?.id);
             break;
         case 'bookmark':
             await handleBookmark(urls);
@@ -84,7 +84,7 @@ bus.on(MSG.LINKCLUMP_ACTIVATE, async (payload, sender) => {
     return { ok: true };
 });
 
-async function handleCopy(urls: Link[], setting: Action) {
+async function handleCopy(urls: Link[], setting: Action, tabId?: number) {
     let text = '';
     const copyFormat = setting.options.copy || 0;
 
@@ -97,11 +97,13 @@ async function handleCopy(urls: Link[], setting: Action) {
         text = `<ul>\n${text}</ul>\n`;
     }
 
-    // Copy to clipboard using offscreen document or navigator.clipboard
-    try {
-        await navigator.clipboard.writeText(text);
-    } catch (error) {
-        console.error('Failed to copy to clipboard:', error);
+    // Send the text to content script to copy to clipboard
+    if (tabId) {
+        try {
+            await bus.sendToTab(tabId, MSG.LINKCLUMP_COPY, { text });
+        } catch (error) {
+            console.error('Failed to send copy message to content script:', error);
+        }
     }
 }
 

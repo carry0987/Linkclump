@@ -12,7 +12,8 @@ export const ALARMS = {
 export enum MSG {
     LINKCLUMP_ACTIVATE = 'LINKCLUMP_ACTIVATE',
     LINKCLUMP_INIT = 'LINKCLUMP_INIT',
-    LINKCLUMP_UPDATE = 'LINKCLUMP_UPDATE'
+    LINKCLUMP_UPDATE = 'LINKCLUMP_UPDATE',
+    LINKCLUMP_COPY = 'LINKCLUMP_COPY'
 }
 
 export const MESSAGE_SPEC = {
@@ -28,6 +29,11 @@ export const MESSAGE_SPEC = {
 
     [MSG.LINKCLUMP_UPDATE]: {
         req: {} as { settings: any },
+        res: {} as { ok: boolean }
+    },
+
+    [MSG.LINKCLUMP_COPY]: {
+        req: {} as { text: string },
         res: {} as { ok: boolean }
     }
 } as const;

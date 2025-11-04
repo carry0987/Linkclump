@@ -74,6 +74,21 @@ class Core {
 
             return { ok: true };
         });
+
+        // Listen for copy requests
+        bus.on(MSG.LINKCLUMP_COPY, async (payload) => {
+            if (payload?.text) {
+                try {
+                    await navigator.clipboard.writeText(payload.text);
+                    return { ok: true };
+                } catch (error: any) {
+                    console.error('Failed to copy to clipboard:', error.message);
+                    return { ok: false };
+                }
+            }
+
+            return { ok: false };
+        });
     }
 
     private setupEventListeners() {
