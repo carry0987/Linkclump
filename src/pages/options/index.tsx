@@ -107,7 +107,9 @@ const OptionsPage = () => {
                         <div key={id} className="border rounded p-4 mb-4">
                             <div className="flex justify-between items-start mb-4">
                                 <h3 className="text-lg font-semibold">Action #{index + 1}</h3>
-                                <button onClick={() => deleteAction(id)} className="bg-red-600 border-red-600 border rounded-full inline-flex items-center justify-center py-2 px-6 text-center text-base font-medium text-white hover:bg-red-800 hover:border-red-800 cursor-pointer">
+                                <button
+                                    onClick={() => deleteAction(id)}
+                                    className="bg-red-600 border-red-600 border rounded-full inline-flex items-center justify-center py-2 px-6 text-center text-base font-medium text-white hover:bg-red-800 hover:border-red-800 cursor-pointer">
                                     Delete
                                 </button>
                             </div>

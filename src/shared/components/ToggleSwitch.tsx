@@ -67,13 +67,11 @@ export const ToggleSwitch = ({
                 />
                 <div
                     className={`box block ${config.track} rounded-full transition-colors duration-200 ease-in-out`}
-                    style={{ backgroundColor: checked ? colorOn : colorOff }}
-                ></div>
+                    style={{ backgroundColor: checked ? colorOn : colorOff }}></div>
                 <div
                     className={`absolute left-0.5 top-0.5 flex ${config.thumb} items-center justify-center rounded-full bg-white shadow-md transition-transform duration-200 ease-in-out ${
                         checked ? config.translate : 'translate-x-0'
-                    }`}
-                ></div>
+                    }`}></div>
             </div>
             {label && (
                 <span className={`select-none text-sm font-medium ${disabled ? 'text-gray-400' : 'text-gray-700'}`}>

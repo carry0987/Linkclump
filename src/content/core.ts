@@ -76,18 +76,16 @@ class Core {
         });
 
         // Listen for copy requests
-        bus.on(MSG.LINKCLUMP_COPY, async (payload) => {
-            if (payload?.text) {
-                try {
-                    await navigator.clipboard.writeText(payload.text);
-                    return { ok: true };
-                } catch (error: any) {
-                    console.error('Failed to copy to clipboard:', error.message);
-                    return { ok: false };
-                }
-            }
+        bus.on(MSG.LINKCLUMP_COPY, async (payload: { text?: string }) => {
+            if (!payload.text || !document.hasFocus()) return { ok: false };
 
-            return { ok: false };
+            try {
+                await navigator.clipboard.writeText(payload.text);
+                return { ok: true };
+            } catch (err) {
+                console.error('Clipboard write failed:', (err as Error).message);
+                return { ok: false };
+            }
         });
     }
 
