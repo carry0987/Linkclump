@@ -5,9 +5,9 @@ import { formatLink, uniqueLinks } from '@/shared/lib/utils';
 import type { Action } from '@/shared/config';
 import type { Link } from '@/shared/types';
 
-// Initialize settings on install
+// Initialize settings on install or update
 chrome.runtime.onInstalled.addListener(async () => {
-    await settingsManager.init();
+    await settingsManager.update();
 });
 
 // Handle LINKCLUMP_INIT message
