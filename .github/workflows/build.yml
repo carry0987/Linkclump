@@ -18,7 +18,8 @@ jobs:
         id: check
         run: |
           echo "status=false" >> $GITHUB_OUTPUT
-          if [[ "${{ github.event.head_commit.message }}" =~ ^Bump\ to\ (v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+          COMMIT_FIRST_LINE=$(echo "${{ github.event.head_commit.message }}" | head -n 1)
+          if [[ "$COMMIT_FIRST_LINE" =~ ^Bump\ to\ (v[0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
             echo "status=true" >> $GITHUB_OUTPUT
             echo "version=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
           fi
