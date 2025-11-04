@@ -117,9 +117,7 @@ const OptionsPage = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <Tooltip content="Choose which mouse button to use for this action. Left button is most common.">
-                                        <label className="block text-sm font-medium mb-1">
-                                            Mouse Button
-                                        </label>
+                                        <label className="block text-sm font-medium mb-1">Mouse Button</label>
                                     </Tooltip>
                                     <select
                                         value={action.mouse}
@@ -137,9 +135,7 @@ const OptionsPage = () => {
 
                                 <div>
                                     <Tooltip content="Hold this key while clicking to trigger the action. Use (None) if you don't want to require a modifier key.">
-                                        <label className="block text-sm font-medium mb-1">
-                                            Modifier Key
-                                        </label>
+                                        <label className="block text-sm font-medium mb-1">Modifier Key</label>
                                     </Tooltip>
                                     <select
                                         value={action.key}
