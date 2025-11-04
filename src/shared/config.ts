@@ -35,7 +35,7 @@ export enum FilterMode {
 
 export interface ActionOptions {
     smart?: boolean;
-    ignore?: [FilterMode, ...string[]];
+    ignore?: [FilterMode, string];
     delay?: number;
     close?: number;
     block?: boolean;
@@ -69,7 +69,7 @@ export const DEFAULT_SETTINGS: Settings = {
             color: '#FFA500',
             options: {
                 smart: false,
-                ignore: [0 as FilterMode],
+                ignore: [0 as FilterMode, ''],
                 delay: 0,
                 close: 0,
                 block: true,
@@ -84,3 +84,132 @@ export const DEFAULT_SETTINGS: Settings = {
 // ---- Settings Manager Instance ----------------------------------------------
 
 export const settingsManager = new SettingManager<Settings>(CURRENT_VERSION, () => DEFAULT_SETTINGS);
+
+// ---- Advanced Options Configuration -----------------------------------------
+
+export type OptionFieldType = 'selection' | 'textbox' | 'selection-textbox' | 'checkbox';
+
+export interface OptionConfig {
+    name: string;
+    type: OptionFieldType;
+    data?: string[];
+    extra: string;
+}
+
+export const OPTIONS_CONFIG: Record<string, OptionConfig> = {
+    smart: {
+        name: 'Smart select',
+        type: 'checkbox',
+        extra: 'With smart select turned on linkclump tries to select only the important links'
+    },
+    ignore: {
+        name: 'Filter links',
+        type: 'selection-textbox',
+        data: ['Exclude links with words', 'Include links with words'],
+        extra: 'Filter links that include/exclude these words; separate words with a comma ,'
+    },
+    copy: {
+        name: 'Copy format',
+        type: 'selection',
+        data: [
+            'URLS with titles',
+            'URLS only',
+            'URLS only space separated',
+            'titles only',
+            'as link HTML',
+            'as list link HTML',
+            'as Markdown'
+        ],
+        extra: 'Format of the links saved to the clipboard'
+    },
+    delay: {
+        name: 'Delay in opening',
+        type: 'textbox',
+        extra: 'Number of seconds between the opening of each link'
+    },
+    close: {
+        name: 'Close tab time',
+        type: 'textbox',
+        extra: "Number of seconds before closing opened tab (0 means the tab wouldn't close)"
+    },
+    block: {
+        name: 'Block repeat links in selection',
+        type: 'checkbox',
+        extra: 'Select to block repeat links from opening'
+    },
+    reverse: {
+        name: 'Reverse order',
+        type: 'checkbox',
+        extra: 'Select to have links opened in reverse order'
+    },
+    end: {
+        name: 'Open tabs at the end',
+        type: 'checkbox',
+        extra: 'Select to have links opened at the end of all other tabs'
+    },
+    unfocus: {
+        name: 'Do not focus on new window',
+        type: 'checkbox',
+        extra: 'Select to stop the new window from coming to the front'
+    }
+};
+
+export const ACTIONS_CONFIG: Record<ActionType, string[]> = {
+    [ActionType.WINDOW]: ['smart', 'unfocus', 'ignore', 'delay', 'block', 'reverse'],
+    [ActionType.TABS]: ['smart', 'end', 'ignore', 'delay', 'close', 'block', 'reverse'],
+    [ActionType.BOOKMARK]: ['smart', 'ignore', 'block', 'reverse'],
+    [ActionType.COPY]: ['smart', 'ignore', 'copy', 'block', 'reverse']
+};
+
+/**
+ * Get default value for an option
+ */
+export function getDefaultOptionValue(optionKey: string): any {
+    switch (optionKey) {
+        case 'smart':
+            return false;
+        case 'ignore':
+            return [FilterMode.EXCLUDE, ''];
+        case 'delay':
+        case 'close':
+            return 0;
+        case 'block':
+            return true;
+        case 'reverse':
+        case 'end':
+        case 'unfocus':
+            return false;
+        case 'copy':
+            return CopyFormat.URLS_WITH_TITLES;
+        default:
+            return undefined;
+    }
+}
+
+/**
+ * Reset options when action type changes
+ * Keeps only options that are compatible with the new action type
+ */
+export function resetIncompatibleOptions(currentOptions: ActionOptions, newActionType: ActionType): ActionOptions {
+    const compatibleOptions = ACTIONS_CONFIG[newActionType];
+    const newOptions: ActionOptions = {
+        block: currentOptions.block,
+        reverse: currentOptions.reverse
+    };
+
+    compatibleOptions.forEach((optionKey) => {
+        if (optionKey === 'block' || optionKey === 'reverse') {
+            // Already set above
+            return;
+        }
+
+        const currentValue = currentOptions[optionKey as keyof ActionOptions];
+        if (currentValue !== undefined) {
+            newOptions[optionKey as keyof ActionOptions] = currentValue as any;
+        } else {
+            newOptions[optionKey as keyof ActionOptions] = getDefaultOptionValue(optionKey);
+        }
+    });
+
+    return newOptions;
+}

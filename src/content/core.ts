@@ -469,7 +469,9 @@ class Core {
             link.height = height;
             link.box = null;
             link.important =
-                action.options.smart === false && link.parentNode !== null && headingTagPattern.test(link.parentNode.nodeName);
+                action.options.smart === false &&
+                link.parentNode !== null &&
+                headingTagPattern.test(link.parentNode.nodeName);
 
             this.links.push(link);
         }
