@@ -22,6 +22,7 @@ import type { CopyFormat } from '@/shared/config';
 
 export function formatLink(link: { url: string; title: string }, format: CopyFormat): string {
     const { url, title } = link;
+
     switch (format) {
         case 0: // URLS_WITH_TITLES
             return `${title}\t${url}\n`;

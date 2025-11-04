@@ -2,7 +2,7 @@ import type { Settings, Action, ActionType } from '@/shared/config';
 import { settingsManager, DEFAULT_SETTINGS } from '@/shared/config';
 import { bus } from '@/shared/lib/messaging';
 import { MSG } from '@/shared/constants';
-import { ColorPicker, ToggleSwitch } from '@/shared/components';
+import { ColorPicker, ToggleSwitch, Tooltip, InfoIcon } from '@/shared/components';
 import { render } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -116,7 +116,11 @@ const OptionsPage = () => {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Mouse Button</label>
+                                    <Tooltip content="Choose which mouse button to use for this action. Left button is most common.">
+                                        <label className="block text-sm font-medium mb-1">
+                                            Mouse Button
+                                        </label>
+                                    </Tooltip>
                                     <select
                                         value={action.mouse}
                                         onChange={(e) => {
@@ -132,7 +136,11 @@ const OptionsPage = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Modifier Key</label>
+                                    <Tooltip content="Hold this key while clicking to trigger the action. Use (None) if you don't want to require a modifier key.">
+                                        <label className="block text-sm font-medium mb-1">
+                                            Modifier Key
+                                        </label>
+                                    </Tooltip>
                                     <select
                                         value={action.key}
                                         onChange={(e) => {
@@ -180,25 +188,29 @@ const OptionsPage = () => {
                             </div>
 
                             <div className="mt-4 space-y-3">
-                                <ToggleSwitch
-                                    checked={action.options.block ?? false}
-                                    onChange={(checked) => {
-                                        const newActions = { ...settings.actions };
-                                        newActions[id].options.block = checked;
-                                        setSettings({ ...settings, actions: newActions });
-                                    }}
-                                    label="Block duplicate links"
-                                />
+                                <Tooltip content="Prevents opening the same link multiple times if you accidentally select it twice.">
+                                    <ToggleSwitch
+                                        checked={action.options.block ?? false}
+                                        onChange={(checked) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].options.block = checked;
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        label="Block duplicate links"
+                                    />
+                                </Tooltip>
 
-                                <ToggleSwitch
-                                    checked={action.options.reverse ?? false}
-                                    onChange={(checked) => {
-                                        const newActions = { ...settings.actions };
-                                        newActions[id].options.reverse = checked;
-                                        setSettings({ ...settings, actions: newActions });
-                                    }}
-                                    label="Reverse order"
-                                />
+                                <Tooltip content="Opens links in reverse order (last selected link opens first).">
+                                    <ToggleSwitch
+                                        checked={action.options.reverse ?? false}
+                                        onChange={(checked) => {
+                                            const newActions = { ...settings.actions };
+                                            newActions[id].options.reverse = checked;
+                                            setSettings({ ...settings, actions: newActions });
+                                        }}
+                                        label="Reverse order"
+                                    />
+                                </Tooltip>
                             </div>
                         </div>
                     ))}
@@ -211,14 +223,20 @@ const OptionsPage = () => {
                 </div>
 
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
-                    <h2 className="text-xl font-semibold mb-4">Blocked Sites</h2>
+                    <h2 className="text-xl font-semibold mb-4">
+                        Blocked Sites
+                        <InfoIcon
+                            tooltip="Add website patterns where Linkclump should be disabled. Supports regular expressions for advanced matching."
+                            position="right"
+                        />
+                    </h2>
                     <textarea
                         value={settings.blocked.join('\n')}
                         onChange={(e) => {
                             const blocked = (e.target as HTMLTextAreaElement).value.split('\n').filter((s) => s.trim());
                             setSettings({ ...settings, blocked });
                         }}
-                        placeholder="Enter one pattern per line (regex supported)"
+                        placeholder="Enter one pattern per line (regex supported)&#10;Examples:&#10;*.google.com&#10;https://example.com/*&#10;/^https://secure\..*/"
                         className="w-full border rounded px-3 py-2 h-32"
                     />
                 </div>
