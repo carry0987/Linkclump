@@ -34,7 +34,9 @@
   },
   "homepage": "https://github.com/carry0987/Chrome-Extension-Starter#readme",
   "dependencies": {
-    "preact": "^10.27.2"
+    "@uiw/react-color": "^2.9.2",
+    "preact": "^10.27.2",
+    "tailgrids": "^2.3.0"
   },
   "devDependencies": {
     "@carry0987/utils": "^3.9.1",

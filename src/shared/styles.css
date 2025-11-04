@@ -1,5 +1,6 @@
 /* Tailwind v4 entry point */
 @import 'tailwindcss';
+@plugin 'tailgrids/plugin';
 
 /* 🎨 Global theme definitions */
 @theme {

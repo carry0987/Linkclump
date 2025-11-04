@@ -2,6 +2,7 @@ import type { Settings, Action, ActionType } from '@/shared/config';
 import { settingsManager, DEFAULT_SETTINGS } from '@/shared/config';
 import { bus } from '@/shared/lib/messaging';
 import { MSG } from '@/shared/constants';
+import { ColorPicker, ToggleSwitch } from '@/shared/components';
 import { render } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -102,11 +103,11 @@ const OptionsPage = () => {
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
                     <h2 className="text-xl font-semibold mb-4">Actions</h2>
 
-                    {Object.entries(settings.actions).map(([id, action]) => (
+                    {Object.entries(settings.actions).map(([id, action], index) => (
                         <div key={id} className="border rounded p-4 mb-4">
                             <div className="flex justify-between items-start mb-4">
-                                <h3 className="font-semibold">Action {id}</h3>
-                                <button onClick={() => deleteAction(id)} className="text-red-600 hover:text-red-800">
+                                <h3 className="text-lg font-semibold">Action #{index + 1}</h3>
+                                <button onClick={() => deleteAction(id)} className="bg-red-600 border-red-600 border rounded-full inline-flex items-center justify-center py-2 px-6 text-center text-base font-medium text-white hover:bg-red-800 hover:border-red-800 cursor-pointer">
                                     Delete
                                 </button>
                             </div>
@@ -164,55 +165,45 @@ const OptionsPage = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Color</label>
-                                    <input
-                                        type="color"
-                                        value={action.color}
-                                        onChange={(e) => {
+                                    <ColorPicker
+                                        label="Color"
+                                        color={action.color}
+                                        onChange={(newColor) => {
                                             const newActions = { ...settings.actions };
-                                            newActions[id].color = (e.target as HTMLInputElement).value;
+                                            newActions[id].color = newColor;
                                             setSettings({ ...settings, actions: newActions });
                                         }}
-                                        className="w-full border rounded px-3 py-2"
                                     />
                                 </div>
                             </div>
 
-                            <div className="mt-4">
-                                <label className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={action.options.block}
-                                        onChange={(e) => {
-                                            const newActions = { ...settings.actions };
-                                            newActions[id].options.block = (e.target as HTMLInputElement).checked;
-                                            setSettings({ ...settings, actions: newActions });
-                                        }}
-                                        className="mr-2"
-                                    />
-                                    <span className="text-sm">Block duplicate links</span>
-                                </label>
+                            <div className="mt-4 space-y-3">
+                                <ToggleSwitch
+                                    checked={action.options.block ?? false}
+                                    onChange={(checked) => {
+                                        const newActions = { ...settings.actions };
+                                        newActions[id].options.block = checked;
+                                        setSettings({ ...settings, actions: newActions });
+                                    }}
+                                    label="Block duplicate links"
+                                />
 
-                                <label className="flex items-center mt-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={action.options.reverse}
-                                        onChange={(e) => {
-                                            const newActions = { ...settings.actions };
-                                            newActions[id].options.reverse = (e.target as HTMLInputElement).checked;
-                                            setSettings({ ...settings, actions: newActions });
-                                        }}
-                                        className="mr-2"
-                                    />
-                                    <span className="text-sm">Reverse order</span>
-                                </label>
+                                <ToggleSwitch
+                                    checked={action.options.reverse ?? false}
+                                    onChange={(checked) => {
+                                        const newActions = { ...settings.actions };
+                                        newActions[id].options.reverse = checked;
+                                        setSettings({ ...settings, actions: newActions });
+                                    }}
+                                    label="Reverse order"
+                                />
                             </div>
                         </div>
                     ))}
 
                     <button
                         onClick={addAction}
-                        className="w-full bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">
+                        className="w-full bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 cursor-pointer">
                         Add Action
                     </button>
                 </div>
