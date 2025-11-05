@@ -259,7 +259,7 @@ const OptionsPage = () => {
                             <div className="mt-4 border-t pt-4">
                                 <button
                                     onClick={() => toggleAdvancedOptions(id)}
-                                    className="flex items-center justify-between w-full text-left font-medium text-blue-600 hover:text-blue-800">
+                                    className="flex items-center justify-between w-full text-left font-medium text-blue-600 hover:text-blue-800 cursor-pointer">
                                     <span>Advanced Options</span>
                                     <span className="text-xl">{expandedActions[id] ? '−' : '+'}</span>
                                 </button>
