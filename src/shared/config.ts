@@ -2,7 +2,7 @@ import { SettingManager } from '@/shared/lib/setting';
 
 // ---- Version ----------------------------------------------------------------
 
-export const CURRENT_VERSION = '1' as const;
+export const CURRENT_VERSION = '2' as const;
 
 // ---- Application-specific Types ---------------------------------------------
 export enum MouseButton {
@@ -35,7 +35,7 @@ export enum FilterMode {
 
 export interface ActionOptions {
     smart?: boolean;
-    ignore?: [FilterMode, string];
+    ignore?: [FilterMode, ...string[]];
     delay?: number;
     close?: number;
     block?: boolean;
@@ -69,7 +69,7 @@ export const DEFAULT_SETTINGS: Settings = {
             color: '#FFA500',
             options: {
                 smart: false,
-                ignore: [0 as FilterMode, ''],
+                ignore: [0 as FilterMode],
                 delay: 0,
                 close: 0,
                 block: true,
@@ -82,8 +82,47 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 // ---- Settings Manager Instance ----------------------------------------------
+class MySettingManager<T extends Settings> extends SettingManager<T> {
+    async migrate(currentSettings: T): Promise<T> {
+        let newSettings = { ...currentSettings };
 
-export const settingsManager = new SettingManager<Settings>(CURRENT_VERSION, () => DEFAULT_SETTINGS);
+        // Migrate ignore field from [FilterMode, string] to [FilterMode, ...string[]]
+        if (newSettings.actions) {
+            const migratedActions = { ...newSettings.actions };
+
+            for (const [actionId, action] of Object.entries(migratedActions)) {
+                if (action.options?.ignore) {
+                    const ignore = action.options.ignore;
+
+                    // Check if it's the old format: [number, string]
+                    if (ignore.length === 2 && typeof ignore[1] === 'string') {
+                        const [mode, keywordsStr] = ignore;
+                        // Split by comma, trim, and filter empty strings
+                        const keywords = keywordsStr
+                            .split(',')
+                            .map((s) => s.trim())
+                            .filter((s) => s !== '');
+
+                        // Update to new format: [FilterMode, ...string[]]
+                        migratedActions[actionId] = {
+                            ...action,
+                            options: {
+                                ...action.options,
+                                ignore: keywords.length > 0 ? [mode as FilterMode, ...keywords] : [mode as FilterMode]
+                            }
+                        };
+                    }
+                }
+            }
+
+            newSettings.actions = migratedActions;
+        }
+
+        return newSettings;
+    }
+}
+
+export const settingsManager = new MySettingManager<Settings>(CURRENT_VERSION, () => DEFAULT_SETTINGS);
 
 // ---- Advanced Options Configuration -----------------------------------------
 
@@ -169,7 +208,7 @@ export function getDefaultOptionValue(optionKey: string): any {
         case 'smart':
             return false;
         case 'ignore':
-            return [FilterMode.EXCLUDE, ''];
+            return [FilterMode.EXCLUDE];
         case 'delay':
         case 'close':
             return 0;

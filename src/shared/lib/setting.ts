@@ -9,10 +9,9 @@ import type { Settings } from '@/shared/config';
 export interface ISettingManager<T extends Settings = Settings> {
     load(): Promise<T>;
     save(settings: T): Promise<void>;
-    isInit(): Promise<boolean>;
-    isLatest(): Promise<boolean>;
-    init(): Promise<T>;
+    reset(): Promise<T>;
     update(): Promise<void>;
+    migrate(currentSettings: T): Promise<T>;
 }
 
 /**
@@ -68,14 +67,14 @@ export class SettingManager<T extends Settings = Settings> implements ISettingMa
     }
 
     /** Whether storage has been initialized at least once. */
-    async isInit(): Promise<boolean> {
+    private async isInit(): Promise<boolean> {
         const ver = await kv.get('sync', 'version');
 
         return typeof ver === 'string';
     }
 
     /** Whether stored version matches current version. */
-    async isLatest(): Promise<boolean> {
+    private async isLatest(): Promise<boolean> {
         const ver = await kv.get('sync', 'version');
 
         return ver === this.currentVersion;
@@ -85,7 +84,7 @@ export class SettingManager<T extends Settings = Settings> implements ISettingMa
      * Initialize storage with defaults for first-time users.
      * Also writes current version.
      */
-    async init(): Promise<T> {
+    private async init(): Promise<T> {
         const s = this.defaultSettings();
         await kv.setAll('sync', {
             settings: s as Settings,
@@ -96,8 +95,47 @@ export class SettingManager<T extends Settings = Settings> implements ISettingMa
     }
 
     /**
-     * Ensure storage is initialized and optionally migrate.
-     * Override this method to implement custom migration logic.
+     * Reset all settings to defaults.
+     * This will clear all current settings and apply the default configuration.
+     *
+     * @returns The default settings that were applied
+     *
+     * @example
+     * ```typescript
+     * // Reset to factory defaults
+     * const defaults = await settingManager.reset();
+     * console.log('Settings reset to:', defaults);
+     * ```
+     */
+    async reset(): Promise<T> {
+        return await this.init();
+    }
+
+    /**
+     * Migrate settings from old version to new version.
+     * Override this method in subclass to implement custom migration logic.
+     *
+     * @param currentSettings - The current settings loaded from storage
+     * @returns The migrated settings
+     *
+     * @example
+     * ```typescript
+     * class MySettingManager extends SettingManager<MySettings> {
+     *   async migrate(current: MySettings): Promise<MySettings> {
+     *     // Add custom migration logic here
+     *     return { ...current, newField: 'defaultValue' };
+     *   }
+     * }
+     * ```
+     */
+    async migrate(currentSettings: T): Promise<T> {
+        // Default implementation: no migration, return settings as-is
+        return currentSettings;
+    }
+
+    /**
+     * Ensure storage is initialized and migrate if version changed.
+     * Calls the migrate() method when version mismatch is detected.
      */
     async update(): Promise<void> {
         const initialized = await this.isInit();
@@ -108,9 +146,9 @@ export class SettingManager<T extends Settings = Settings> implements ISettingMa
 
         const latest = await this.isLatest();
         if (!latest) {
-            // Migration hook: override this method in subclass for custom migration logic
+            // Load current settings and apply migration
             const current = await this.load();
-            const migrated = { ...current };
+            const migrated = await this.migrate(current);
 
             await kv.setAll('sync', {
                 settings: migrated as Settings,

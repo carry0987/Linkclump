@@ -101,7 +101,10 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
 
             case 'selection-textbox': {
                 if (optionKey === 'ignore') {
-                    const [mode, keywords] = options.ignore ?? [0, ''];
+                    const ignoreData = options.ignore ?? [0];
+                    const mode = ignoreData[0] as FilterMode;
+                    const keywords = ignoreData.slice(1).join(', ');
+
                     return (
                         <div key={optionKey}>
                             <Tooltip content={config.extra}>
@@ -111,7 +114,8 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                                 value={mode}
                                 onChange={(e) => {
                                     const newMode = parseInt((e.target as HTMLSelectElement).value) as FilterMode;
-                                    updateOption('ignore', [newMode, keywords]);
+                                    const keywordArray = ignoreData.slice(1);
+                                    updateOption('ignore', [newMode, ...keywordArray]);
                                 }}
                                 className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all mb-1">
                                 {config.data?.map((option, index) => (
@@ -125,7 +129,11 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                                 value={keywords}
                                 onChange={(e) => {
                                     const newKeywords = (e.target as HTMLInputElement).value;
-                                    updateOption('ignore', [mode, newKeywords]);
+                                    const keywordArray = newKeywords
+                                        .split(',')
+                                        .map((s) => s.trim())
+                                        .filter((s) => s !== '');
+                                    updateOption('ignore', [mode, ...keywordArray]);
                                 }}
                                 placeholder="keyword1, keyword2, keyword3"
                                 className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"

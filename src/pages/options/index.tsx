@@ -72,7 +72,7 @@ const OptionsPage = () => {
             color: '#FFA500',
             options: {
                 smart: false,
-                ignore: [0, ''],
+                ignore: [0],
                 delay: 0,
                 close: 0,
                 block: true,

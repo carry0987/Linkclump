@@ -421,6 +421,7 @@ class Core {
 
         // Create filter regex
         const jsProtocolPattern = new RegExp('^javascript:', 'i');
+        console.log('Linkclump: Starting link detection with action', action.options.ignore);
         const ignorePattern =
             action.options.ignore && action.options.ignore.length > 1
                 ? new RegExp(action.options.ignore.slice(1).join('|'), 'i')
