@@ -167,7 +167,7 @@ const OptionsPage = () => {
                                             newActions[id].mouse = parseInt((e.target as HTMLSelectElement).value);
                                             setSettings({ ...settings, actions: newActions });
                                         }}
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                        className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                         <option value="0">Left</option>
                                         <option value="1">Middle</option>
                                         <option value="2">Right</option>
@@ -187,7 +187,7 @@ const OptionsPage = () => {
                                             newActions[id].key = (e.target as HTMLSelectElement).value;
                                             setSettings({ ...settings, actions: newActions });
                                         }}
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                        className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                         {Object.entries(getAvailableKeys(action.mouse)).map(([key, keyName]) => (
                                             <option key={key} value={key}>
                                                 {keyName}
@@ -208,7 +208,7 @@ const OptionsPage = () => {
                                                 (e.target as HTMLSelectElement).value as ActionType
                                             );
                                         }}
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                        className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                         <option value="tabs">Open as Tabs</option>
                                         <option value="window">Open in New Window</option>
                                         <option value="copy">Copy to Clipboard</option>
@@ -316,7 +316,7 @@ const OptionsPage = () => {
                             const blocked = (e.target as HTMLTextAreaElement).value.split('\n').filter((s) => s.trim());
                             setSettings({ ...settings, blocked });
                         }}
-                        className="w-full h-40 px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none font-mono text-sm"
+                        className="w-full h-40 px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none font-mono text-sm"
                         placeholder="Enter one pattern per line (regex supported)&#10;Examples:&#10;*.google.com&#10;https://example.com/*&#10;/^https://secure\..*/"></textarea>
                     <p className="text-sm text-slate-500 mt-2">
                         Enter one pattern per line. Supports regex patterns for advanced filtering.

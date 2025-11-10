@@ -48,7 +48,7 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                             onChange={(e) =>
                                 updateOption(optionKey, parseFloat((e.target as HTMLInputElement).value) || 0)
                             }
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         />
                     </div>
                 );
@@ -65,7 +65,7 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                             <select
                                 value={value ? 'on' : 'off'}
                                 onChange={(e) => updateOption('smart', (e.target as HTMLSelectElement).value === 'on')}
-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                 {config.data?.map((option) => (
                                     <option key={option} value={option}>
                                         {option}
@@ -86,7 +86,7 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                                 onChange={(e) =>
                                     updateOption('copy', parseInt((e.target as HTMLSelectElement).value) as CopyFormat)
                                 }
-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                 {config.data?.map((option, index) => (
                                     <option key={option} value={index}>
                                         {option}
@@ -113,7 +113,7 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                                     const newMode = parseInt((e.target as HTMLSelectElement).value) as FilterMode;
                                     updateOption('ignore', [newMode, keywords]);
                                 }}
-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all mb-1">
+                                className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all mb-1">
                                 {config.data?.map((option, index) => (
                                     <option key={option} value={index}>
                                         {option}
@@ -128,7 +128,7 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                                     updateOption('ignore', [mode, newKeywords]);
                                 }}
                                 placeholder="keyword1, keyword2, keyword3"
-                                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                             />
                         </div>
                     );
