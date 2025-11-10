@@ -430,11 +430,14 @@ class Core {
         for (let i = 0; i < pageLinks.length; i++) {
             const link = pageLinks[i] as LinkElement;
 
+            // Skip javascript links
             if (jsProtocolPattern.test(link.href)) continue;
 
+            // Skip empty links
             const href = link.getAttribute('href');
             if (!href || href === '#') continue;
 
+            // Apply ignore filter
             if (ignorePattern && action.options.ignore) {
                 const matches = ignorePattern.test(link.href) || ignorePattern.test(link.innerHTML);
                 const filterMode = action.options.ignore[0];
