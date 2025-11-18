@@ -44,12 +44,12 @@
     "@rsbuild/plugin-preact": "^1.6.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@testing-library/preact": "^3.2.4",
-    "@types/chrome": "^0.1.29",
+    "@types/chrome": "^0.1.30",
     "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "4.0.9",
+    "@vitest/coverage-v8": "4.0.10",
     "jsdom": "^27.2.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.17",
-    "vitest": "^4.0.9"
+    "vitest": "^4.0.10"
   }
 }
