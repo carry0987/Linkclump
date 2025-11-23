@@ -108,7 +108,7 @@ pnpm run test:cov
 
 ```bash
 # Build for production
-pnpm run build
+pnpm run build:prod
 ```
 
 The optimized extension will be output to the `dist/` folder.
