@@ -1,6 +1,6 @@
 {
   "name": "linkclump",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "Lets you open, copy or bookmark multiple links at the same time.",
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/carry0987/Chrome-Extension-Starter.git"
+    "url": "git+https://github.com/carry0987/Linkclump.git"
   },
   "keywords": [
     "chrome-extension",
@@ -30,9 +30,9 @@
   "author": "carry0987",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/carry0987/Chrome-Extension-Starter/issues"
+    "url": "https://github.com/carry0987/Linkclump/issues"
   },
-  "homepage": "https://github.com/carry0987/Chrome-Extension-Starter#readme",
+  "homepage": "https://github.com/carry0987/Linkclump#readme",
   "dependencies": {
     "@uiw/react-color": "^2.9.2",
     "preact": "^10.27.2",
