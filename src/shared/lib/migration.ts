@@ -63,6 +63,10 @@ export interface Migration {
  * @example parseVersion("1.2.3") => [1, 2, 3]
  */
 const parseVersion = (version: Version): number[] => {
+    if (typeof version !== 'string') {
+        version = String(version);
+    }
+
     return version.split('.').map((n) => parseInt(n, 10) || 0);
 };
 
