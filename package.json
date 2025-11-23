@@ -4,7 +4,7 @@
   "description": "Lets you open, copy or bookmark multiple links at the same time.",
   "type": "module",
   "scripts": {
-    "build": "rsbuild build",
+    "build": "rsbuild build --mode=development",
     "build:prod": "rsbuild build --mode=production",
     "build:watch": "rsbuild build --watch",
     "lint": "prettier --write \"src/**/*.{ts,tsx,css}\" \"__tests__/**/*.{ts,tsx}\" \"public/**/*.{json,css,html}\"",
