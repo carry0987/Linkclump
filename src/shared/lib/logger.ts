@@ -1,5 +1,5 @@
 type Level = 'debug' | 'info' | 'warn' | 'error';
-const NS = '[Linkclumps]';
+const NS = '[Linkclump]';
 
 const log = (level: Level, ...args: unknown[]) => {
     const time = new Date().toISOString();
