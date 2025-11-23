@@ -1,4 +1,5 @@
 import type { MessageMap, Message } from '@/shared/types';
+import { toErrorResponse } from '@/shared/lib/error';
 
 // add a private sentinel to indicate "I did not handle this message"
 const UNHANDLED = Symbol('UNHANDLED');
@@ -27,7 +28,7 @@ const onMessage = <T extends Message = Message>(
                         if (r === UNHANDLED) return; // do not respond, allow other listeners
                         sendResponse(r);
                     })
-                    .catch((e) => sendResponse({ error: String(e) }));
+                    .catch((e) => sendResponse(toErrorResponse(e)));
                 // only keep the channel open if we *intend* to respond
                 return true;
             }
@@ -41,7 +42,7 @@ const onMessage = <T extends Message = Message>(
             sendResponse(maybe);
             return true;
         } catch (e) {
-            sendResponse({ error: String(e) });
+            sendResponse(toErrorResponse(e));
             return true;
         }
     };

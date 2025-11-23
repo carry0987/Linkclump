@@ -1,8 +1,5 @@
 import { SettingManager } from '@/shared/lib/setting';
-
-// ---- Version ----------------------------------------------------------------
-
-export const CURRENT_VERSION = '2' as const;
+import { type Migration } from '@/shared/lib/migration';
 
 // ---- Application-specific Types ---------------------------------------------
 export enum MouseButton {
@@ -63,13 +60,13 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
     actions: {
         '101': {
-            mouse: 0 as MouseButton, // LEFT
+            mouse: MouseButton.LEFT, // LEFT
             key: 'z', // Z key
-            action: 'tabs' as ActionType,
+            action: ActionType.TABS,
             color: '#FFA500',
             options: {
                 smart: false,
-                ignore: [0 as FilterMode],
+                ignore: [FilterMode.EXCLUDE],
                 delay: 0,
                 close: 0,
                 block: true,
@@ -82,13 +79,45 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 // ---- Settings Manager Instance ----------------------------------------------
-class MySettingManager<T extends Settings> extends SettingManager<T> {
-    async migrate(currentSettings: T): Promise<T> {
-        let newSettings = { ...currentSettings };
 
-        // Migrate ignore field from [FilterMode, string] to [FilterMode, ...string[]]
-        if (newSettings.actions) {
-            const migratedActions = { ...newSettings.actions };
+/**
+ * Global settings manager instance.
+ * Note: Version management and migrations are handled by background/migration.ts
+ */
+export const settingsManager = new SettingManager<Settings>(() => DEFAULT_SETTINGS);
+
+// ---- Custom Migrations ------------------------------------------------------
+
+/**
+ * Define your custom migrations here in chronological order.
+ * Each migration should be idempotent (safe to run multiple times).
+ *
+ * If no migrations are defined (empty array), the migration system will only
+ * track the version without running any migration logic.
+ *
+ * Migration functions receive a context object with:
+ * - currentVersion: The version being migrated to
+ * - storedVersion: The previously stored version (null for fresh install)
+ * - getStorage: Helper to read current storage values
+ *
+ * Migration functions should return an object with storage updates:
+ * - sync: Object with keys/values to update in sync storage
+ * - local: Object with keys/values to update in local storage
+ *
+ * Or return void/undefined to handle storage updates manually.
+ */
+export const customMigrations: Migration[] = [
+    {
+        version: '1.2.0',
+        description: 'Migrate ignore field from [FilterMode, string] to [FilterMode, ...string[]]',
+        migrate: async (ctx) => {
+            const settings = (await ctx.getStorage('sync', 'settings')) as Settings | undefined;
+            if (!settings?.actions) {
+                return;
+            }
+
+            let hasChanges = false;
+            const migratedActions = { ...settings.actions };
 
             for (const [actionId, action] of Object.entries(migratedActions)) {
                 if (action.options?.ignore) {
@@ -111,18 +140,24 @@ class MySettingManager<T extends Settings> extends SettingManager<T> {
                                 ignore: keywords.length > 0 ? [mode as FilterMode, ...keywords] : [mode as FilterMode]
                             }
                         };
+                        hasChanges = true;
                     }
                 }
             }
 
-            newSettings.actions = migratedActions;
+            if (hasChanges) {
+                return {
+                    sync: {
+                        settings: {
+                            ...settings,
+                            actions: migratedActions
+                        }
+                    }
+                };
+            }
         }
-
-        return newSettings;
     }
-}
-
-export const settingsManager = new MySettingManager<Settings>(CURRENT_VERSION, () => DEFAULT_SETTINGS);
+];
 
 // ---- Advanced Options Configuration -----------------------------------------
 

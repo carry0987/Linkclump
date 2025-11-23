@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { logger } from '@/shared/lib/logger';
 
+const NS = '[Linkclumps]';
+
 describe('Logger', () => {
     beforeEach(() => {
         vi.restoreAllMocks();
@@ -22,7 +24,7 @@ describe('Logger', () => {
             logger.debug('Debug message', { data: 'test' });
 
             expect(spy).toHaveBeenCalled();
-            expect(spy.mock.calls[0][0]).toContain('[Chrome-Extension-Starter]');
+            expect(spy.mock.calls[0][0]).toContain(NS);
             expect(spy.mock.calls[0][2]).toBe('Debug message');
         });
     });
@@ -34,7 +36,7 @@ describe('Logger', () => {
             logger.info('Info message');
 
             expect(spy).toHaveBeenCalled();
-            expect(spy.mock.calls[0][0]).toContain('[Chrome-Extension-Starter]');
+            expect(spy.mock.calls[0][0]).toContain(NS);
         });
 
         it('should log multiple arguments', () => {
@@ -54,7 +56,7 @@ describe('Logger', () => {
             logger.warn('Warning message');
 
             expect(spy).toHaveBeenCalled();
-            expect(spy.mock.calls[0][0]).toContain('[Chrome-Extension-Starter]');
+            expect(spy.mock.calls[0][0]).toContain(NS);
         });
     });
 
@@ -65,7 +67,7 @@ describe('Logger', () => {
             logger.error('Error message', new Error('Test error'));
 
             expect(spy).toHaveBeenCalled();
-            expect(spy.mock.calls[0][0]).toContain('[Chrome-Extension-Starter]');
+            expect(spy.mock.calls[0][0]).toContain(NS);
         });
 
         it('should log Error objects', () => {

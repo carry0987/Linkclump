@@ -21,6 +21,15 @@ export type Message<T extends string = string, P = unknown> = {
     payload?: P;
 };
 
+// Structured error response type
+export interface ErrorResponse {
+    error: {
+        message: string;
+        code?: string;
+        details?: unknown;
+    };
+}
+
 // Typed storage schema used by createTypedStorage
 export interface StorageSchema {
     sync: {
