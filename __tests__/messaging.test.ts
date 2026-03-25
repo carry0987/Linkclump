@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMessenger } from '@/shared/lib/messaging';
 
 // Mock chrome.runtime and chrome.tabs API
@@ -16,7 +16,7 @@ const mockTabs = {
     sendMessage: vi.fn()
 };
 
-// @ts-ignore - Mock global chrome object
+// @ts-expect-error - Mock global chrome object
 global.chrome = {
     runtime: mockRuntime,
     tabs: mockTabs

@@ -1,8 +1,8 @@
-import { bus } from '@/shared/lib/messaging';
-import { MSG } from '@/shared/constants';
-import { settingsManager } from '@/shared/config';
-import { formatLink, uniqueLinks } from '@/shared/lib/utils';
 import type { Action } from '@/shared/config';
+import { settingsManager } from '@/shared/config';
+import { MSG } from '@/shared/constants';
+import { bus } from '@/shared/lib/messaging';
+import { formatLink, uniqueLinks } from '@/shared/lib/utils';
 import type { Link } from '@/shared/types';
 
 // Handle LINKCLUMP_INIT message

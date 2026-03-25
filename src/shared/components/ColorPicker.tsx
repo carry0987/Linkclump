@@ -1,6 +1,6 @@
+import { type ColorResult, Sketch } from '@uiw/react-color';
 import { Fragment } from 'preact';
 import { useState } from 'preact/hooks';
-import { Sketch, type ColorResult } from '@uiw/react-color';
 
 interface ColorPickerProps {
     color: string;

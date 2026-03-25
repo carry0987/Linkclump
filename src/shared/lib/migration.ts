@@ -1,6 +1,6 @@
-import { kv } from './storage';
-import { logger } from './logger';
 import { customMigrations } from '@/shared/config';
+import { logger } from './logger';
+import { kv } from './storage';
 
 /**
  * Version format: "x.y.z"

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { typedKeys, typedEntries, typedValues, tuple, literalSet } from '@/shared/lib/utils';
+import { describe, expect, it } from 'vitest';
+import { literalSet, tuple, typedEntries, typedKeys, typedValues } from '@/shared/lib/utils';
 
 describe('Utils', () => {
     describe('typedKeys()', () => {

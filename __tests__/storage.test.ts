@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createTypedStorage } from '@/shared/lib/storage';
 
 // Mock chrome.storage API
@@ -23,7 +23,7 @@ const mockStorageAreas = {
     }
 };
 
-// @ts-ignore - Mock global chrome object
+// @ts-expect-error - Mock global chrome object
 global.chrome = {
     storage: mockStorageAreas
 } as any;

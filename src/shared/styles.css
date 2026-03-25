@@ -1,6 +1,6 @@
 /* Tailwind v4 entry point */
-@import 'tailwindcss';
-@plugin 'tailgrids/plugin';
+@import "tailwindcss";
+@plugin "tailgrids/plugin";
 
 /* 🎨 Global theme definitions */
 @theme {
@@ -14,8 +14,8 @@
     --color-text-light: #f3f4f6;
 
     /* ✍️ Font system */
-    --font-sans: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: "Inter", "Noto Sans TC", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
 
     /* 🧱 Base border radius */
     --radius-md: 0.5rem;

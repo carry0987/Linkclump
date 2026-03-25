@@ -1,5 +1,5 @@
-import { logger } from '@/shared/lib/logger';
 import { RESTRICTED } from '@/shared/constants';
+import { logger } from '@/shared/lib/logger';
 import { runMigrations } from '@/shared/lib/migration';
 
 /** Check if URL should disable action */

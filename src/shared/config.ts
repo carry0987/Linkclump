@@ -1,5 +1,5 @@
+import type { Migration } from '@/shared/lib/migration';
 import { SettingManager } from '@/shared/lib/setting';
-import { type Migration } from '@/shared/lib/migration';
 
 // ---- Application-specific Types ---------------------------------------------
 export enum MouseButton {

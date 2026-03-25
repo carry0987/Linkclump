@@ -1,7 +1,7 @@
+import type { Action, Settings } from '@/shared/config';
+import { END_KEY, HOME_KEY, LEFT_BUTTON, MSG, OS_LINUX, OS_MAC, OS_WIN, Z_INDEX } from '@/shared/constants';
 import { bus } from '@/shared/lib/messaging';
-import { MSG, Z_INDEX, OS_WIN, OS_LINUX, OS_MAC, LEFT_BUTTON, END_KEY, HOME_KEY } from '@/shared/constants';
-import type { Settings, Action } from '@/shared/config';
-import type { LinkElement, Link } from '@/shared/types';
+import type { Link, LinkElement } from '@/shared/types';
 
 // Detect OS
 const detectOS = (): number => {
@@ -420,13 +420,13 @@ class Core {
         const pageLinks = document.links;
 
         // Create filter regex
-        const jsProtocolPattern = new RegExp('^javascript:', 'i');
+        const jsProtocolPattern = /^javascript:/i;
         console.log('Linkclump: Starting link detection with action', action.options.ignore);
         const ignorePattern =
             action.options.ignore && action.options.ignore.length > 1
                 ? new RegExp(action.options.ignore.slice(1).join('|'), 'i')
                 : null;
-        const headingTagPattern = new RegExp('^H\\d$');
+        const headingTagPattern = /^H\d$/;
 
         for (let i = 0; i < pageLinks.length; i++) {
             const link = pageLinks[i] as LinkElement;

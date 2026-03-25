@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock chrome runtime API
 const mockManifest = { version: '1.2.0' };
@@ -82,7 +82,7 @@ const mockStorageLocal = {
     })
 };
 
-// @ts-ignore - Mock global chrome object
+// @ts-expect-error - Mock global chrome object
 global.chrome = {
     runtime: mockRuntime,
     storage: {
@@ -96,7 +96,7 @@ global.chrome = {
 } as any;
 
 // Import after mocking
-import { runMigrations, getMigrationStatus, rollbackVersion, type Migration } from '@/shared/lib/migration';
+import { getMigrationStatus, type Migration, rollbackVersion, runMigrations } from '@/shared/lib/migration';
 
 // Mock customMigrations
 vi.mock('@/shared/config', () => ({

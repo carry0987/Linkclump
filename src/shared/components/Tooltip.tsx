@@ -1,5 +1,5 @@
-import { useState } from 'preact/hooks';
 import type { ComponentChildren } from 'preact';
+import { useState } from 'preact/hooks';
 
 interface TooltipProps {
     content: string;

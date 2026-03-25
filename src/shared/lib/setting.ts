@@ -1,5 +1,5 @@
-import { kv } from './storage';
 import type { Settings } from '@/shared/config';
+import { kv } from './storage';
 
 // ---- Types ------------------------------------------------------------------
 

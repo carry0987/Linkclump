@@ -1,6 +1,6 @@
 import type { ActionOptions, ActionType, CopyFormat, FilterMode } from '@/shared/config';
-import { OPTIONS_CONFIG, ACTIONS_CONFIG } from '@/shared/config';
-import { Tooltip, ToggleSwitch } from './';
+import { ACTIONS_CONFIG, OPTIONS_CONFIG } from '@/shared/config';
+import { ToggleSwitch, Tooltip } from './';
 
 interface AdvancedOptionFieldsProps {
     actionType: ActionType;

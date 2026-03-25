@@ -1,10 +1,10 @@
-import type { Settings, Action, ActionType } from '@/shared/config';
-import { settingsManager, DEFAULT_SETTINGS, resetIncompatibleOptions } from '@/shared/config';
-import { bus } from '@/shared/lib/messaging';
-import { MSG } from '@/shared/constants';
-import { ColorPicker, ToggleSwitch, Tooltip, InfoIcon, AdvancedOptionFields } from '@/shared/components';
 import { render } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import { AdvancedOptionFields, ColorPicker, InfoIcon, ToggleSwitch, Tooltip } from '@/shared/components';
+import type { Action, ActionType, Settings } from '@/shared/config';
+import { DEFAULT_SETTINGS, resetIncompatibleOptions, settingsManager } from '@/shared/config';
+import { MSG } from '@/shared/constants';
+import { bus } from '@/shared/lib/messaging';
 
 // Import styles
 import '@/shared/styles.css';

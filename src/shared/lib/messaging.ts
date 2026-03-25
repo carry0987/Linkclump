@@ -1,5 +1,5 @@
-import type { MessageMap, Message } from '@/shared/types';
 import { toErrorResponse } from '@/shared/lib/error';
+import type { Message, MessageMap } from '@/shared/types';
 
 // add a private sentinel to indicate "I did not handle this message"
 const UNHANDLED = Symbol('UNHANDLED');
