@@ -16,7 +16,7 @@ const mockTabs = {
     sendMessage: vi.fn()
 };
 
-// @ts-expect-error - Mock global chrome object
+// Mock global chrome object
 global.chrome = {
     runtime: mockRuntime,
     tabs: mockTabs

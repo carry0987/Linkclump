@@ -128,7 +128,12 @@ const OptionsPage = () => {
 
             <div className="mb-8">
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                        className="w-6 h-6 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-label="Actions">
                         <path
                             stroke-linecap="round"
                             stroke-linejoin="round"
@@ -147,6 +152,7 @@ const OptionsPage = () => {
                             <div className="flex justify-between items-start mb-6">
                                 <h3 className="text-lg font-semibold text-slate-800">Action #{index + 1}</h3>
                                 <button
+                                    type="button"
                                     onClick={() => deleteAction(id)}
                                     className="bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 text-sm cursor-pointer">
                                     Delete
@@ -156,11 +162,14 @@ const OptionsPage = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <Tooltip content="Choose which mouse button to use for this action. Left button is most common.">
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        <label
+                                            htmlFor={`mouse-${id}`}
+                                            className="block text-sm font-medium text-slate-700 mb-2">
                                             Mouse Button
                                         </label>
                                     </Tooltip>
                                     <select
+                                        id={`mouse-${id}`}
                                         value={action.mouse}
                                         onChange={(e) => {
                                             const newActions = { ...settings.actions };
@@ -176,11 +185,14 @@ const OptionsPage = () => {
 
                                 <div>
                                     <Tooltip content="Hold this key while clicking to trigger the action. Use (None) if you don't want to require a modifier key.">
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        <label
+                                            htmlFor={`key-${id}`}
+                                            className="block text-sm font-medium text-slate-700 mb-2">
                                             Modifier Key
                                         </label>
                                     </Tooltip>
                                     <select
+                                        id={`key-${id}`}
                                         value={action.key}
                                         onChange={(e) => {
                                             const newActions = { ...settings.actions };
@@ -199,8 +211,13 @@ const OptionsPage = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Action</label>
+                                    <label
+                                        htmlFor={`action-${id}`}
+                                        className="block text-sm font-medium text-slate-700 mb-2">
+                                        Action
+                                    </label>
                                     <select
+                                        id={`action-${id}`}
                                         value={action.action}
                                         onChange={(e) => {
                                             handleActionTypeChange(
@@ -258,6 +275,7 @@ const OptionsPage = () => {
                             {/* Advanced Options Section */}
                             <div className="mt-4 border-t pt-4">
                                 <button
+                                    type="button"
                                     onClick={() => toggleAdvancedOptions(id)}
                                     className="flex items-center justify-between w-full text-left font-medium text-blue-600 hover:text-blue-800 cursor-pointer">
                                     <span>Advanced Options</span>
@@ -283,9 +301,10 @@ const OptionsPage = () => {
                 </div>
 
                 <button
+                    type="button"
                     onClick={addAction}
                     className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-xl transition-colors duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Add">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Add Action
@@ -294,7 +313,12 @@ const OptionsPage = () => {
 
             <div className="mb-8">
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                        className="w-6 h-6 text-red-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-label="Blocked Sites">
                         <path
                             stroke-linecap="round"
                             stroke-linejoin="round"
@@ -327,9 +351,10 @@ const OptionsPage = () => {
             <div className="flex justify-end">
                 {saved && <span className="text-green-600 self-center mr-5">Settings saved!</span>}
                 <button
+                    type="button"
                     onClick={handleSave}
                     className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-xl transition-colors duration-200 shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Save">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     Save Settings
@@ -339,4 +364,7 @@ const OptionsPage = () => {
     );
 };
 
-render(<OptionsPage />, document.getElementById('root')!);
+const root = document.getElementById('root');
+if (root) {
+    render(<OptionsPage />, root);
+}

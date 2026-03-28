@@ -9,7 +9,7 @@ export type InferMessageMap<T extends Record<string, string>> = {
 // Merge overrides while keeping defaults for unspecified keys
 export type MessageMapOf<
     T extends Record<string, string>,
-    O extends Partial<{ [K in keyof T]: { req?: any; res?: any } }>
+    O extends Partial<{ [K in keyof T]: { req?: unknown; res?: unknown } }>
 > = {
     [K in keyof T]: O[K] extends object ? O[K] : { req?: unknown; res?: unknown };
 };

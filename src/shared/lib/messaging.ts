@@ -4,6 +4,7 @@ import type { Message, MessageMap } from '@/shared/types';
 // add a private sentinel to indicate "I did not handle this message"
 const UNHANDLED = Symbol('UNHANDLED');
 // Make every nested field optional and possibly undefined
+// biome-ignore lint/complexity/noBannedTypes: DeepPartial needs Function type to preserve callable signatures
 type DeepPartial<T> = T extends Function
     ? T
     : T extends object
@@ -54,7 +55,7 @@ const onMessage = <T extends Message = Message>(
     return () => chrome.runtime.onMessage.removeListener(listener);
 };
 
-export const createMessenger = <M extends Record<string, { req?: any; res?: any }>>() => {
+export const createMessenger = <M extends Record<string, { req?: unknown; res?: unknown }>>() => {
     const sendToTab = <K extends keyof M & string, TRes = M[K] extends { res: infer R } ? R : unknown>(
         tabId: number,
         type: K,
@@ -84,7 +85,7 @@ export const createMessenger = <M extends Record<string, { req?: any; res?: any 
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 const id = tabs[0]?.id;
                 if (!id) return resolve(undefined);
-                sendToTab(id, type, payload as any, opts)
+                sendToTab(id, type, payload as M[K] extends { req: infer P } ? P : undefined, opts)
                     .then((r) => resolve(r as unknown as TRes | undefined))
                     .catch(reject);
             });
@@ -100,7 +101,10 @@ export const createMessenger = <M extends Record<string, { req?: any; res?: any 
     ) => {
         const off = onMessage((msg, sender) => {
             if ((msg as Message).type !== type) return UNHANDLED;
-            return handler((msg as any).payload, sender);
+            return handler(
+                (msg as Message).payload as M[K] extends { req: infer P } ? Readonly<DeepPartial<P>> : undefined,
+                sender
+            );
         });
         return off;
     };

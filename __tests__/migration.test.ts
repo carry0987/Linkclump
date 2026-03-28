@@ -44,7 +44,9 @@ const mockStorageSync = {
     }),
     remove: vi.fn((keys: string | string[], callback: any) => {
         const keyArray = Array.isArray(keys) ? keys : [keys];
-        keyArray.forEach((key) => mockStorage.sync.delete(key));
+        keyArray.forEach((key) => {
+            mockStorage.sync.delete(key);
+        });
         callback();
     })
 };
@@ -77,12 +79,14 @@ const mockStorageLocal = {
     }),
     remove: vi.fn((keys: string | string[], callback: any) => {
         const keyArray = Array.isArray(keys) ? keys : [keys];
-        keyArray.forEach((key) => mockStorage.local.delete(key));
+        keyArray.forEach((key) => {
+            mockStorage.local.delete(key);
+        });
         callback();
     })
 };
 
-// @ts-expect-error - Mock global chrome object
+// Mock global chrome object
 global.chrome = {
     runtime: mockRuntime,
     storage: {

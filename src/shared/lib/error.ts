@@ -21,8 +21,8 @@ export const isErrorResponse = (response: unknown): response is ErrorResponse =>
         typeof response === 'object' &&
         response !== null &&
         'error' in response &&
-        typeof (response as any).error === 'object' &&
-        typeof (response as any).error.message === 'string'
+        typeof (response as Record<string, unknown>).error === 'object' &&
+        typeof ((response as Record<string, unknown>).error as Record<string, unknown>)?.message === 'string'
     );
 };
 

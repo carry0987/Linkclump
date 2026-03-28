@@ -23,7 +23,7 @@ const mockStorageAreas = {
     }
 };
 
-// @ts-expect-error - Mock global chrome object
+// Mock global chrome object
 global.chrome = {
     storage: mockStorageAreas
 } as any;

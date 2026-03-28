@@ -1,4 +1,4 @@
-import type { Action } from '@/shared/config';
+import type { Action, Settings } from '@/shared/config';
 import { settingsManager } from '@/shared/config';
 import { MSG } from '@/shared/constants';
 import { bus } from '@/shared/lib/messaging';
@@ -18,14 +18,15 @@ bus.on(MSG.LINKCLUMP_INIT, async () => {
 // Handle LINKCLUMP_UPDATE message
 bus.on(MSG.LINKCLUMP_UPDATE, async (payload) => {
     if (payload?.settings) {
-        await settingsManager.save(payload.settings);
+        const settings = payload.settings as Settings;
+        await settingsManager.save(settings);
 
         // Broadcast update to all tabs
         const tabs = await chrome.tabs.query({});
         for (const tab of tabs) {
             if (tab.id) {
                 try {
-                    await bus.sendToTab(tab.id, MSG.LINKCLUMP_UPDATE, { settings: payload.settings });
+                    await bus.sendToTab(tab.id, MSG.LINKCLUMP_UPDATE, { settings });
                 } catch (_error) {
                     // Ignore errors for tabs that don't have content script
                 }
@@ -164,7 +165,7 @@ async function handleTabs(urls: Link[], setting: Action, senderTabId?: number) {
         await openTabsSequentially(
             urls,
             setting.options.delay || 0,
-            currentWindow.id!,
+            currentWindow.id ?? 0,
             tab.id,
             tabIndex,
             setting.options.close || 0

@@ -32,6 +32,7 @@ export const InfoIcon = ({ tooltip, position = 'top', className = '' }: InfoIcon
 
     return (
         <div
+            role="tooltip"
             className={[`pl-1 align-text-bottom relative inline-block`, className].join(' ').trim()}
             onMouseEnter={() => setIsVisible(true)}
             onMouseLeave={() => setIsVisible(false)}>

@@ -69,7 +69,7 @@ class Core {
         // Listen for settings updates
         bus.on(MSG.LINKCLUMP_UPDATE, (payload) => {
             if (payload.settings) {
-                this.settings = payload.settings;
+                this.settings = payload.settings as Settings;
             }
 
             return { ok: true };

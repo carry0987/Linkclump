@@ -1,4 +1,4 @@
-import type { Action } from './config';
+import type { Action, Settings } from './config';
 
 export const FLAGS = {
     ENABLE_OVERLAY: true
@@ -18,7 +18,7 @@ export enum MSG {
 
 export const MESSAGE_SPEC = {
     [MSG.LINKCLUMP_ACTIVATE]: {
-        req: {} as { urls: Array<{ url: string; title: string }>; setting: any },
+        req: {} as { urls: Array<{ url: string; title: string }>; setting: Action },
         res: {} as { ok: boolean }
     },
 
@@ -28,7 +28,7 @@ export const MESSAGE_SPEC = {
     },
 
     [MSG.LINKCLUMP_UPDATE]: {
-        req: {} as { settings: any },
+        req: {} as { settings: Settings },
         res: {} as { ok: boolean }
     },
 

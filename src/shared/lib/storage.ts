@@ -26,7 +26,7 @@ const areaOf = (area: AllAreas) => {
 };
 
 // Factory that binds to your schema S
-export function createTypedStorage<S extends Partial<Record<AllAreas, Record<string, any>>>>() {
+export function createTypedStorage<S extends Partial<Record<AllAreas, Record<string, unknown>>>>() {
     // Narrow Area to only those present in S
     type Area = AreasOf<S>;
 
@@ -74,7 +74,7 @@ export function createTypedStorage<S extends Partial<Record<AllAreas, Record<str
         const bucket = areaOf(area);
         const result = await new Promise<Record<string, unknown>>((resolve) => {
             // Chrome API: get(null/undefined) returns all items
-            bucket.get((defaults ?? undefined) as any, (v) => resolve(v));
+            bucket.get((defaults ?? undefined) as Record<string, unknown> | string[] | undefined, (v) => resolve(v));
         });
 
         return result;
@@ -155,7 +155,7 @@ export function createTypedStorage<S extends Partial<Record<AllAreas, Record<str
             if ((areaName as Area) !== area) return;
             const change = changes[key as string];
             if (!change) return;
-            cb(change.newValue as any, change.oldValue as any);
+            cb(change.newValue as ValueOf<S[A], K> | undefined, change.oldValue as ValueOf<S[A], K> | undefined);
         };
         chrome.storage.onChanged.addListener(handler);
         return () => chrome.storage.onChanged.removeListener(handler);

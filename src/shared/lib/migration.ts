@@ -39,8 +39,8 @@ export interface MigrationContext {
  * Migration result - what to update in storage
  */
 export interface MigrationResult {
-    sync?: Record<string, any>;
-    local?: Record<string, any>;
+    sync?: Record<string, unknown>;
+    local?: Record<string, unknown>;
 }
 
 /**

@@ -6,13 +6,14 @@
     "esModuleInterop": true,
     "importHelpers": true,
     "strict": true,
+    "skipLibCheck": true,
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "outDir": "dist",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["chrome"]
+    "types": ["chrome", "@rsbuild/core/types"]
   },
   "include": ["src/**/*", "__tests__/**/*", "rsbuild.config.ts", "vitest.config.ts", "public/manifest.json"],
   "exclude": ["node_modules", "dist", "**/__snapshots__/**/*"]

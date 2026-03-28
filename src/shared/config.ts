@@ -238,7 +238,7 @@ export const ACTIONS_CONFIG: Record<ActionType, string[]> = {
 /**
  * Get default value for an option
  */
-export function getDefaultOptionValue(optionKey: string): any {
+export function getDefaultOptionValue(optionKey: string): ActionOptions[keyof ActionOptions] {
     switch (optionKey) {
         case 'smart':
             return false;
@@ -279,9 +279,9 @@ export function resetIncompatibleOptions(currentOptions: ActionOptions, newActio
 
         const currentValue = currentOptions[optionKey as keyof ActionOptions];
         if (currentValue !== undefined) {
-            newOptions[optionKey as keyof ActionOptions] = currentValue as any;
+            (newOptions as Record<string, unknown>)[optionKey] = currentValue;
         } else {
-            newOptions[optionKey as keyof ActionOptions] = getDefaultOptionValue(optionKey);
+            (newOptions as Record<string, unknown>)[optionKey] = getDefaultOptionValue(optionKey);
         }
     });
 

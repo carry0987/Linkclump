@@ -11,7 +11,7 @@ interface AdvancedOptionFieldsProps {
 export const AdvancedOptionFields = ({ actionType, options, onChange }: AdvancedOptionFieldsProps) => {
     const availableOptions = ACTIONS_CONFIG[actionType].filter((opt) => opt !== 'block' && opt !== 'reverse');
 
-    const updateOption = (key: string, value: any) => {
+    const updateOption = (key: string, value: ActionOptions[keyof ActionOptions]) => {
         onChange({ ...options, [key]: value });
     };
 
@@ -38,9 +38,14 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                 return (
                     <div key={optionKey}>
                         <Tooltip content={config.extra}>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">{config.name}</label>
+                            <label
+                                htmlFor={`opt-${optionKey}`}
+                                className="block text-sm font-medium text-slate-700 mb-2">
+                                {config.name}
+                            </label>
                         </Tooltip>
                         <input
+                            id={`opt-${optionKey}`}
                             type="number"
                             min="0"
                             step="0.1"
@@ -60,9 +65,14 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                     return (
                         <div key={optionKey}>
                             <Tooltip content={config.extra}>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">{config.name}</label>
+                                <label
+                                    htmlFor={`opt-${optionKey}`}
+                                    className="block text-sm font-medium text-slate-700 mb-2">
+                                    {config.name}
+                                </label>
                             </Tooltip>
                             <select
+                                id={`opt-${optionKey}`}
                                 value={value ? 'on' : 'off'}
                                 onChange={(e) => updateOption('smart', (e.target as HTMLSelectElement).value === 'on')}
                                 className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
@@ -79,9 +89,14 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                     return (
                         <div key={optionKey}>
                             <Tooltip content={config.extra}>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">{config.name}</label>
+                                <label
+                                    htmlFor={`opt-${optionKey}`}
+                                    className="block text-sm font-medium text-slate-700 mb-2">
+                                    {config.name}
+                                </label>
                             </Tooltip>
                             <select
+                                id={`opt-${optionKey}`}
                                 value={value}
                                 onChange={(e) =>
                                     updateOption(
@@ -111,13 +126,18 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                     return (
                         <div key={optionKey}>
                             <Tooltip content={config.extra}>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">{config.name}</label>
+                                <label
+                                    htmlFor={`opt-${optionKey}`}
+                                    className="block text-sm font-medium text-slate-700 mb-2">
+                                    {config.name}
+                                </label>
                             </Tooltip>
                             <select
+                                id={`opt-${optionKey}`}
                                 value={mode}
                                 onChange={(e) => {
                                     const newMode = parseInt((e.target as HTMLSelectElement).value, 10) as FilterMode;
-                                    const keywordArray = ignoreData.slice(1);
+                                    const keywordArray = ignoreData.slice(1) as string[];
                                     updateOption('ignore', [newMode, ...keywordArray]);
                                 }}
                                 className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all mb-1">
