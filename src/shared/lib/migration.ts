@@ -47,7 +47,7 @@ export interface MigrationResult {
  * Migration function type
  * Receives context and returns storage updates to apply
  */
-export type MigrationFn = (context: MigrationContext) => Promise<void | MigrationResult>;
+export type MigrationFn = (context: MigrationContext) => Promise<undefined | MigrationResult>;
 
 /**
  * Migration definition interface

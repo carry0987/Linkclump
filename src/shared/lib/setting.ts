@@ -46,7 +46,7 @@ export class SettingManager<T extends Settings = Settings> implements ISettingMa
 
             // If not initialized or corrupted, initialize with defaults
             return await this.init();
-        } catch (error) {
+        } catch (_error) {
             return await this.init();
         }
     }

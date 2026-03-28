@@ -84,7 +84,10 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                             <select
                                 value={value}
                                 onChange={(e) =>
-                                    updateOption('copy', parseInt((e.target as HTMLSelectElement).value) as CopyFormat)
+                                    updateOption(
+                                        'copy',
+                                        parseInt((e.target as HTMLSelectElement).value, 10) as CopyFormat
+                                    )
                                 }
                                 className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                                 {config.data?.map((option, index) => (
@@ -113,7 +116,7 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                             <select
                                 value={mode}
                                 onChange={(e) => {
-                                    const newMode = parseInt((e.target as HTMLSelectElement).value) as FilterMode;
+                                    const newMode = parseInt((e.target as HTMLSelectElement).value, 10) as FilterMode;
                                     const keywordArray = ignoreData.slice(1);
                                     updateOption('ignore', [newMode, ...keywordArray]);
                                 }}

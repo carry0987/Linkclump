@@ -1,4 +1,4 @@
-import type { Action, Settings } from './config';
+import type { Action } from './config';
 
 export const FLAGS = {
     ENABLE_OVERLAY: true

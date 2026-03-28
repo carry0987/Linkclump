@@ -1,7 +1,7 @@
+import { createRequire } from 'node:module';
 import { defineConfig } from '@rsbuild/core';
 import { pluginPreact } from '@rsbuild/plugin-preact';
 import tailwind from '@tailwindcss/postcss';
-import { createRequire } from 'module';
 
 export default defineConfig({
     // Disable HMR; Chrome MV3 can't use it
@@ -43,7 +43,7 @@ export default defineConfig({
             // Return the modified config
             return config;
         },
-        postcss: (opts, { addPlugins }) => {
+        postcss: (_opts, { addPlugins }) => {
             addPlugins([tailwind()]);
         }
     },

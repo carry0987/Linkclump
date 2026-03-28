@@ -26,7 +26,7 @@ bus.on(MSG.LINKCLUMP_UPDATE, async (payload) => {
             if (tab.id) {
                 try {
                     await bus.sendToTab(tab.id, MSG.LINKCLUMP_UPDATE, { settings: payload.settings });
-                } catch (error) {
+                } catch (_error) {
                     // Ignore errors for tabs that don't have content script
                 }
             }

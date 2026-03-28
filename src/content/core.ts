@@ -321,7 +321,7 @@ class Core {
         this.mouseY = y;
     }
 
-    private detectLinks(x: number, y: number, open: boolean): boolean {
+    private detectLinks(_x: number, _y: number, open: boolean): boolean {
         if (!this.settings || !this.currentSetting || !this.box) return true;
 
         const action = this.settings.actions[this.currentSetting];

@@ -10,16 +10,16 @@ import { bus } from '@/shared/lib/messaging';
 import '@/shared/styles.css';
 
 // Helper function to get available keys based on mouse button and OS
-const getAvailableKeys = (mouseButton: number) => {
+const getAvailableKeys = (_mouseButton: number) => {
     const keys: Record<string, string> = {};
 
     // Modifier keys
-    keys['Shift'] = 'Shift';
-    keys['Control'] = 'Ctrl';
+    keys.Shift = 'Shift';
+    keys.Control = 'Ctrl';
 
     // Note: On Linux, Alt is typically reserved for window management
     // We'll include it for now, but you may want to detect OS if needed
-    keys['Alt'] = 'Alt';
+    keys.Alt = 'Alt';
 
     // Allow no key for left button and on Windows for right button
     // For simplicity, we'll allow no key for all mouse buttons
@@ -164,7 +164,7 @@ const OptionsPage = () => {
                                         value={action.mouse}
                                         onChange={(e) => {
                                             const newActions = { ...settings.actions };
-                                            newActions[id].mouse = parseInt((e.target as HTMLSelectElement).value);
+                                            newActions[id].mouse = parseInt((e.target as HTMLSelectElement).value, 10);
                                             setSettings({ ...settings, actions: newActions });
                                         }}
                                         className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
