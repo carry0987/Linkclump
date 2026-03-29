@@ -1,6 +1,6 @@
 # Linkclump
 
-![build](https://github.com/carry0987/Linkclump/actions/workflows/build.yml/badge.svg)
+![release](https://github.com/carry0987/Linkclump/actions/workflows/release.yml/badge.svg)
 ![CI](https://github.com/carry0987/Linkclump/actions/workflows/ci.yml/badge.svg)
 
 **Linkclump** is a powerful Chrome extension that lets you **open**, **copy**, or **bookmark multiple links at once** by drawing a selection box around them. Built with modern web technologies and fully compatible with **Manifest V3**.
