@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/carry0987/Linkclump/compare/v1.3.0...v1.4.0) (2026-03-29)
+
+
+### Features
+
+* Change name to Linkclump Neo ([d94b6eb](https://github.com/carry0987/Linkclump/commit/d94b6eb7bccb3b7d133a2893b38ef2e642c41fb4))
+
 ## [1.3.0](https://github.com/carry0987/Linkclump/compare/v1.2.3...v1.3.0) (2026-03-28)
 
 
