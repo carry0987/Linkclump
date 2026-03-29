@@ -122,7 +122,7 @@ const OptionsPage = () => {
     return (
         <div className="max-w-5xl mx-auto">
             <div className="mb-8">
-                <h1 className="text-4xl font-bold text-slate-800 mb-2">Linkclump Settings</h1>
+                <h1 className="text-4xl font-bold text-slate-800 mb-2">Linkclump Neo Settings</h1>
                 <p className="text-slate-600">Configure your link clumping actions and preferences</p>
             </div>
 
@@ -328,7 +328,7 @@ const OptionsPage = () => {
                     </svg>
                     Blocked Sites
                     <InfoIcon
-                        tooltip="Add website patterns where Linkclump should be disabled. Supports regular expressions for advanced matching."
+                        tooltip="Add website patterns where Linkclump Neo should be disabled. Supports regular expressions for advanced matching."
                         position="right"
                     />
                 </h2>

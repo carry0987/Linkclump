@@ -56,7 +56,7 @@ jobs:
       - name: Create extension archive
         run: |
           cd dist
-          zip -r ../linkclump-${{ needs.release-please.outputs.tag_name }}.zip .
+          zip -r ../linkclump-neo-${{ needs.release-please.outputs.tag_name }}.zip .
           cd ..
 
       - name: Upload artifact to Release
@@ -68,7 +68,7 @@ jobs:
           omitNameDuringUpdate: true
           omitBodyDuringUpdate: true
           omitDraftDuringUpdate: true
-          artifacts: linkclump-${{ needs.release-please.outputs.tag_name }}.zip
+          artifacts: linkclump-neo-${{ needs.release-please.outputs.tag_name }}.zip
 
   update-release-tag:
     name: Update Release Version Tag

@@ -50,7 +50,7 @@ export const RESTRICTED = {
 
 export type RestrictedScheme = (typeof RESTRICTED.schemes)[number];
 
-// Linkclump constants
+// Linkclump Neo constants
 export const Z_INDEX = 2147483647;
 export const OS_WIN = 1;
 export const OS_LINUX = 0;

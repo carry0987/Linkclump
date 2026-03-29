@@ -1,5 +1,5 @@
 type Level = 'debug' | 'info' | 'warn' | 'error';
-const NS = '[Linkclump]';
+const NS = '[Linkclump Neo]';
 const isDev = process.env.NODE_ENV !== 'production';
 
 const noop = () => {};

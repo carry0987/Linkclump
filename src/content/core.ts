@@ -53,7 +53,7 @@ class Core {
                     const re = new RegExp(pattern, 'i');
                     if (re.test(window.location.href)) {
                         allowed = false;
-                        console.log(`Linkclump is blocked on this site: ${pattern}`);
+                        console.log(`Linkclump Neo is blocked on this site: ${pattern}`);
                         break;
                     }
                 }
@@ -63,7 +63,7 @@ class Core {
                 }
             }
         } catch (error) {
-            console.error('Failed to initialize Linkclump:', error);
+            console.error('Failed to initialize Linkclump Neo:', error);
         }
 
         // Listen for settings updates
@@ -421,7 +421,7 @@ class Core {
 
         // Create filter regex
         const jsProtocolPattern = /^javascript:/i;
-        console.log('Linkclump: Starting link detection with action', action.options.ignore);
+        console.log('Linkclump Neo: Starting link detection with action', action.options.ignore);
         const ignorePattern =
             action.options.ignore && action.options.ignore.length > 1
                 ? new RegExp(action.options.ignore.slice(1).join('|'), 'i')

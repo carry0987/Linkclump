@@ -110,7 +110,7 @@ async function handleBookmark(urls: Link[]) {
         const otherBookmarks = bookmarkTree[0].children?.[1];
 
         if (otherBookmarks) {
-            const folderName = `Linkclump ${new Date().toLocaleString()}`;
+            const folderName = `Linkclump Neo ${new Date().toLocaleString()}`;
             const folder = await chrome.bookmarks.create({
                 parentId: otherBookmarks.id,
                 title: folderName

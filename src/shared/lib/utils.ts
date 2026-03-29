@@ -17,7 +17,7 @@ export const tuple = <T extends string | number | symbol, const A extends T[]>(.
 /** Create a Set with literal type preservation. */
 export const literalSet = <T extends string | number | symbol>(...args: T[]) => new Set<T>(args);
 
-// Linkclump
+// Linkclump Neo
 import type { CopyFormat } from '@/shared/config';
 
 export function formatLink(link: { url: string; title: string }, format: CopyFormat): string {

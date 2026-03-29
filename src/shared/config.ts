@@ -174,7 +174,7 @@ export const OPTIONS_CONFIG: Record<string, OptionConfig> = {
     smart: {
         name: 'Smart select',
         type: 'checkbox',
-        extra: 'With smart select turned on linkclump tries to select only the important links'
+        extra: 'With smart select turned on Linkclump Neo tries to select only the important links'
     },
     ignore: {
         name: 'Filter links',

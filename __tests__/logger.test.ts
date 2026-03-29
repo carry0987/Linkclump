@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { logger } from '@/shared/lib/logger';
 
-const NS = '[Linkclump]';
+const NS = '[Linkclump Neo]';
 
 describe('Logger', () => {
     beforeEach(() => {
