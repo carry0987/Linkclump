@@ -1,5 +1,8 @@
 type Level = 'debug' | 'info' | 'warn' | 'error';
 const NS = '[Linkclump]';
+const isDev = process.env.NODE_ENV !== 'production';
+
+const noop = () => {};
 
 const log = (level: Level, ...args: unknown[]) => {
     const time = new Date().toISOString();
@@ -7,8 +10,8 @@ const log = (level: Level, ...args: unknown[]) => {
 };
 
 export const logger = {
-    debug: (...a: unknown[]) => log('debug', ...a),
-    info: (...a: unknown[]) => log('info', ...a),
-    warn: (...a: unknown[]) => log('warn', ...a),
-    error: (...a: unknown[]) => log('error', ...a)
+    debug: isDev ? (...a: unknown[]) => log('debug', ...a) : noop,
+    info: isDev ? (...a: unknown[]) => log('info', ...a) : noop,
+    warn: isDev ? (...a: unknown[]) => log('warn', ...a) : noop,
+    error: isDev ? (...a: unknown[]) => log('error', ...a) : noop
 };
