@@ -1,4 +1,4 @@
-import type { MSG, MESSAGE_SPEC } from '@/shared/constants';
+import type { MESSAGE_SPEC, MSG } from '@/shared/constants';
 import type { Settings } from './config';
 
 // Build a default message map from MSG keys
