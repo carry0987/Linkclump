@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/carry0987/Linkclump/compare/v1.4.0...v1.5.0) (2026-07-03)
+
+
+### Features
+
+* mark Linkclump-opened links after opening tabs ([0382532](https://github.com/carry0987/Linkclump/commit/0382532368ea4f5933d0896f8fbc97e34a963b2a))
+
 ## [1.4.0](https://github.com/carry0987/Linkclump/compare/v1.3.0...v1.4.0) (2026-03-29)
 
 
