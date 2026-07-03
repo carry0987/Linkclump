@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/carry0987/Linkclump/compare/v1.5.0...v1.5.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* handle missing DOMMatrix in content script ([62cafe9](https://github.com/carry0987/Linkclump/commit/62cafe9b49245726c0605a3a1cdd47d1c55142b5))
+
 ## [1.5.0](https://github.com/carry0987/Linkclump/compare/v1.4.0...v1.5.0) (2026-07-03)
 
 
