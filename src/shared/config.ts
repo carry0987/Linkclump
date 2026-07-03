@@ -30,6 +30,11 @@ export enum FilterMode {
     INCLUDE = 1
 }
 
+export enum OpenedLinkStyleMode {
+    STYLED = 'styled',
+    CLASS_ONLY = 'class-only'
+}
+
 export interface ActionOptions {
     smart?: boolean;
     ignore?: [FilterMode, ...string[]];
@@ -40,6 +45,8 @@ export interface ActionOptions {
     end?: boolean;
     unfocus?: boolean;
     copy?: CopyFormat;
+    openedLinkStyleMode?: OpenedLinkStyleMode;
+    openedLinkColor?: string;
 }
 
 export interface Action {
@@ -71,7 +78,9 @@ export const DEFAULT_SETTINGS: Settings = {
                 close: 0,
                 block: true,
                 reverse: false,
-                end: false
+                end: false,
+                openedLinkStyleMode: OpenedLinkStyleMode.STYLED,
+                openedLinkColor: '#0f766e'
             }
         }
     },
@@ -156,12 +165,65 @@ export const customMigrations: Migration[] = [
                 };
             }
         }
+    },
+    {
+        version: '1.4.0',
+        description: 'Add opened-link style options to tab actions',
+        migrate: async (ctx) => {
+            const settings = (await ctx.getStorage('sync', 'settings')) as Settings | undefined;
+            if (!settings?.actions) {
+                return;
+            }
+
+            let hasChanges = false;
+            const migratedActions = { ...settings.actions };
+
+            for (const [actionId, action] of Object.entries(migratedActions)) {
+                if (action.action !== ActionType.TABS) {
+                    continue;
+                }
+
+                const nextOptions = { ...action.options };
+                let actionChanged = false;
+
+                if (!nextOptions.openedLinkStyleMode) {
+                    nextOptions.openedLinkStyleMode = OpenedLinkStyleMode.STYLED;
+                    actionChanged = true;
+                }
+
+                if (!nextOptions.openedLinkColor) {
+                    nextOptions.openedLinkColor = '#0f766e';
+                    actionChanged = true;
+                }
+
+                if (!actionChanged) {
+                    continue;
+                }
+
+                migratedActions[actionId] = {
+                    ...action,
+                    options: nextOptions
+                };
+                hasChanges = true;
+            }
+
+            if (hasChanges) {
+                return {
+                    sync: {
+                        settings: {
+                            ...settings,
+                            actions: migratedActions
+                        }
+                    }
+                };
+            }
+        }
     }
 ];
 
 // ---- Advanced Options Configuration -----------------------------------------
 
-export type OptionFieldType = 'selection' | 'textbox' | 'selection-textbox' | 'checkbox';
+export type OptionFieldType = 'selection' | 'textbox' | 'selection-textbox' | 'checkbox' | 'color';
 
 export interface OptionConfig {
     name: string;
@@ -201,6 +263,17 @@ export const OPTIONS_CONFIG: Record<string, OptionConfig> = {
         type: 'textbox',
         extra: 'Number of seconds between the opening of each link'
     },
+    openedLinkStyleMode: {
+        name: 'Linkclump-opened link appearance',
+        type: 'selection',
+        data: ['Apply Linkclump-opened style', 'Only add linkclump-opened class'],
+        extra: 'Controls how Linkclump marks links after it opens them. This does not use the browser visited state.'
+    },
+    openedLinkColor: {
+        name: 'Linkclump-opened link color',
+        type: 'color',
+        extra: 'Color applied to links marked by Linkclump after they are opened.'
+    },
     close: {
         name: 'Close tab time',
         type: 'textbox',
@@ -230,7 +303,17 @@ export const OPTIONS_CONFIG: Record<string, OptionConfig> = {
 
 export const ACTIONS_CONFIG: Record<ActionType, string[]> = {
     [ActionType.WINDOW]: ['smart', 'unfocus', 'ignore', 'delay', 'block', 'reverse'],
-    [ActionType.TABS]: ['smart', 'end', 'ignore', 'delay', 'close', 'block', 'reverse'],
+    [ActionType.TABS]: [
+        'smart',
+        'openedLinkStyleMode',
+        'openedLinkColor',
+        'end',
+        'ignore',
+        'delay',
+        'close',
+        'block',
+        'reverse'
+    ],
     [ActionType.BOOKMARK]: ['smart', 'ignore', 'block', 'reverse'],
     [ActionType.COPY]: ['smart', 'ignore', 'copy', 'block', 'reverse']
 };
@@ -247,6 +330,10 @@ export function getDefaultOptionValue(optionKey: string): ActionOptions[keyof Ac
         case 'delay':
         case 'close':
             return 0;
+        case 'openedLinkStyleMode':
+            return OpenedLinkStyleMode.STYLED;
+        case 'openedLinkColor':
+            return '#0f766e';
         case 'block':
             return true;
         case 'reverse':

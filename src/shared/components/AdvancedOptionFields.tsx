@@ -1,6 +1,6 @@
 import type { ActionOptions, ActionType, CopyFormat, FilterMode } from '@/shared/config';
-import { ACTIONS_CONFIG, OPTIONS_CONFIG } from '@/shared/config';
-import { ToggleSwitch, Tooltip } from './';
+import { ACTIONS_CONFIG, OPTIONS_CONFIG, OpenedLinkStyleMode } from '@/shared/config';
+import { ColorPicker, ToggleSwitch, Tooltip } from './';
 
 interface AdvancedOptionFieldsProps {
     actionType: ActionType;
@@ -9,7 +9,21 @@ interface AdvancedOptionFieldsProps {
 }
 
 export const AdvancedOptionFields = ({ actionType, options, onChange }: AdvancedOptionFieldsProps) => {
-    const availableOptions = ACTIONS_CONFIG[actionType].filter((opt) => opt !== 'block' && opt !== 'reverse');
+    const availableOptions = ACTIONS_CONFIG[actionType].filter((opt) => {
+        if (opt === 'block' || opt === 'reverse') {
+            return false;
+        }
+
+        if (
+            actionType === 'tabs' &&
+            options.openedLinkStyleMode === OpenedLinkStyleMode.CLASS_ONLY &&
+            opt === 'openedLinkColor'
+        ) {
+            return false;
+        }
+
+        return true;
+    });
 
     const updateOption = (key: string, value: ActionOptions[keyof ActionOptions]) => {
         onChange({ ...options, [key]: value });
@@ -59,32 +73,25 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                 );
             }
 
+            case 'color': {
+                const value = (options[optionKey as keyof ActionOptions] as string) ?? '#0f766e';
+                return (
+                    <div key={optionKey}>
+                        <Tooltip content={config.extra}>
+                            <div>
+                                <ColorPicker
+                                    label={config.name}
+                                    color={value}
+                                    onChange={(color) => updateOption(optionKey, color)}
+                                />
+                            </div>
+                        </Tooltip>
+                    </div>
+                );
+            }
+
             case 'selection': {
-                if (optionKey === 'smart') {
-                    const value = options.smart ?? false;
-                    return (
-                        <div key={optionKey}>
-                            <Tooltip content={config.extra}>
-                                <label
-                                    htmlFor={`opt-${optionKey}`}
-                                    className="block text-sm font-medium text-slate-700 mb-2">
-                                    {config.name}
-                                </label>
-                            </Tooltip>
-                            <select
-                                id={`opt-${optionKey}`}
-                                value={value ? 'on' : 'off'}
-                                onChange={(e) => updateOption('smart', (e.target as HTMLSelectElement).value === 'on')}
-                                className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                                {config.data?.map((option) => (
-                                    <option key={option} value={option}>
-                                        {option}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    );
-                } else if (optionKey === 'copy') {
+                if (optionKey === 'copy') {
                     const value = options.copy ?? 0;
                     return (
                         <div key={optionKey}>
@@ -114,6 +121,61 @@ export const AdvancedOptionFields = ({ actionType, options, onChange }: Advanced
                         </div>
                     );
                 }
+
+                if (optionKey === 'openedLinkStyleMode') {
+                    const value = options.openedLinkStyleMode ?? OpenedLinkStyleMode.STYLED;
+                    return (
+                        <div key={optionKey}>
+                            <Tooltip content={config.extra}>
+                                <label
+                                    htmlFor={`opt-${optionKey}`}
+                                    className="block text-sm font-medium text-slate-700 mb-2">
+                                    {config.name}
+                                </label>
+                            </Tooltip>
+                            <select
+                                id={`opt-${optionKey}`}
+                                value={value}
+                                onChange={(e) =>
+                                    updateOption(
+                                        'openedLinkStyleMode',
+                                        (e.target as HTMLSelectElement).value as OpenedLinkStyleMode
+                                    )
+                                }
+                                className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                <option value={OpenedLinkStyleMode.STYLED}>Apply Linkclump style</option>
+                                <option value={OpenedLinkStyleMode.CLASS_ONLY}>Add class only</option>
+                            </select>
+                        </div>
+                    );
+                }
+
+                if (optionKey === 'smart') {
+                    const value = options.smart ?? false;
+                    return (
+                        <div key={optionKey}>
+                            <Tooltip content={config.extra}>
+                                <label
+                                    htmlFor={`opt-${optionKey}`}
+                                    className="block text-sm font-medium text-slate-700 mb-2">
+                                    {config.name}
+                                </label>
+                            </Tooltip>
+                            <select
+                                id={`opt-${optionKey}`}
+                                value={value ? 'on' : 'off'}
+                                onChange={(e) => updateOption('smart', (e.target as HTMLSelectElement).value === 'on')}
+                                className="w-full px-4 py-3 text-slate-700 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                {config.data?.map((option) => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    );
+                }
+
                 break;
             }
 

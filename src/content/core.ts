@@ -13,6 +13,12 @@ const detectOS = (): number => {
 };
 
 const os = detectOS();
+const ACTION_TABS = 'tabs';
+const OPENED_LINK_CLASS = 'linkclump-opened';
+const OPENED_LINK_STYLE_ID = 'linkclump-opened-style';
+const OPENED_LINK_STYLE_MODE_STYLED = 'styled';
+const OPENED_LINK_STYLE_MODE_CLASS_ONLY = 'class-only';
+const DEFAULT_OPENED_LINK_COLOR = '#0f766e';
 
 class Core {
     private settings: Settings | null = null;
@@ -168,11 +174,15 @@ class Core {
         if (this.boxOn) {
             // Allow the detection of the mouse to bounce
             if (this.allowSelection() && this.timer === 0) {
-                this.timer = window.setTimeout(() => {
+                const finalizeSelection = () => {
                     this.updateBox(event.pageX, event.pageY);
                     this.detectLinks(event.pageX, event.pageY, true);
                     this.stop();
                     this.timer = 0;
+                };
+
+                this.timer = window.setTimeout(() => {
+                    finalizeSelection();
                 }, 100);
             }
         } else {
@@ -344,6 +354,7 @@ class Core {
         let count = 0;
         const countSet = new Set<string>();
         const openTabs: Link[] = [];
+        const selectedLinks: LinkElement[] = [];
 
         const x1 = parseFloat(this.box.style.left);
         const x2 = x1 + parseFloat(this.box.style.width);
@@ -356,6 +367,7 @@ class Core {
             if ((!this.smartSelect || link.important) && overlaps) {
                 if (open) {
                     openTabs.push({ url: link.href, title: link.innerText || link.textContent || '' });
+                    selectedLinks.push(link);
                 }
 
                 if (!this.smartSelect) {
@@ -401,10 +413,68 @@ class Core {
         }
 
         if (open && openTabs.length > 0) {
-            bus.sendToBackground(MSG.LINKCLUMP_ACTIVATE, { urls: openTabs, setting: action });
+            this.openSelectedLinks(action, openTabs, selectedLinks);
         }
 
         return true;
+    }
+
+    private openSelectedLinks(action: Action, openTabs: Link[], selectedLinks: LinkElement[]) {
+        if (action.action !== ACTION_TABS) {
+            bus.sendToBackground(MSG.LINKCLUMP_ACTIVATE, { urls: openTabs, setting: action });
+            return;
+        }
+
+        this.markLinksAsOpened(selectedLinks, action);
+        bus.sendToBackground(MSG.LINKCLUMP_ACTIVATE, { urls: openTabs, setting: action });
+    }
+
+    private markLinksAsOpened(links: LinkElement[], action: Action) {
+        this.syncOpenedLinkStyle(action);
+
+        for (const link of links) {
+            link.classList.add(OPENED_LINK_CLASS);
+            link.dataset.linkclumpOpened = 'true';
+        }
+    }
+
+    private getOpenedLinkStyleMode(action: Action) {
+        return action.options.openedLinkStyleMode ?? OPENED_LINK_STYLE_MODE_STYLED;
+    }
+
+    private getOpenedLinkColor(action: Action): string {
+        return action.options.openedLinkColor ?? DEFAULT_OPENED_LINK_COLOR;
+    }
+
+    private getOpenedLinkStyle(color: string) {
+        return `
+    a.${OPENED_LINK_CLASS}[href] {
+        color: ${color};
+        text-decoration-color: ${color};
+    }
+`;
+    }
+
+    private syncOpenedLinkStyle(action: Action) {
+        const existingStyle = document.getElementById(OPENED_LINK_STYLE_ID);
+
+        if (this.getOpenedLinkStyleMode(action) === OPENED_LINK_STYLE_MODE_CLASS_ONLY) {
+            existingStyle?.remove();
+            return;
+        }
+
+        const styleContent = this.getOpenedLinkStyle(this.getOpenedLinkColor(action));
+
+        if (existingStyle instanceof HTMLStyleElement) {
+            existingStyle.textContent = styleContent;
+            return;
+        }
+
+        const style = document.createElement('style');
+        style.id = OPENED_LINK_STYLE_ID;
+        style.textContent = styleContent;
+
+        (document.head || document.documentElement).appendChild(style);
     }
 
     private start(action: Action) {

@@ -2,7 +2,7 @@ import { render } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { AdvancedOptionFields, ColorPicker, InfoIcon, ToggleSwitch, Tooltip } from '@/shared/components';
 import type { Action, ActionType, Settings } from '@/shared/config';
-import { DEFAULT_SETTINGS, resetIncompatibleOptions, settingsManager } from '@/shared/config';
+import { DEFAULT_SETTINGS, OpenedLinkStyleMode, resetIncompatibleOptions, settingsManager } from '@/shared/config';
 import { MSG } from '@/shared/constants';
 import { bus } from '@/shared/lib/messaging';
 
@@ -77,7 +77,9 @@ const OptionsPage = () => {
                 close: 0,
                 block: true,
                 reverse: false,
-                end: false
+                end: false,
+                openedLinkStyleMode: OpenedLinkStyleMode.STYLED,
+                openedLinkColor: '#0f766e'
             }
         };
 
