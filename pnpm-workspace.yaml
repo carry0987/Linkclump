@@ -19,3 +19,4 @@ minimumReleaseAgeExclude:
   - '@tailwindcss/oxide@4.3.2'
   - '@tailwindcss/postcss@4.3.2'
   - tailwindcss@4.3.2
+  - '@rsbuild/core@2.1.4'

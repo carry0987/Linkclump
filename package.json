@@ -41,14 +41,14 @@
     "tailgrids": "^2.4.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.1",
+    "@biomejs/biome": "^2.5.2",
     "@carry0987/utils": "^3.10.3",
-    "@rsbuild/core": "^2.1.1",
+    "@rsbuild/core": "^2.1.4",
     "@rsbuild/plugin-preact": "^2.0.0",
     "@tailwindcss/postcss": "^4.3.2",
     "@testing-library/preact": "^3.2.4",
-    "@types/chrome": "^0.2.0",
-    "@types/node": "^26.0.1",
+    "@types/chrome": "^0.2.2",
+    "@types/node": "^26.1.0",
     "@vitest/coverage-v8": "4.1.9",
     "jsdom": "^29.1.1",
     "tailwindcss": "^4.3.2",
