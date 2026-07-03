@@ -1,6 +1,6 @@
 {
   "name": "linkclump-neo",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Lets you open, copy or bookmark multiple links at the same time.",
   "type": "module",
   "scripts": {
