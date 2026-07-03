@@ -652,7 +652,10 @@ class Core {
 
         do {
             const style = window.getComputedStyle(parent);
-            const matrix = new DOMMatrix(style.transform);
+            const matrix =
+                typeof DOMMatrix !== 'undefined' && style.transform && style.transform !== 'none'
+                    ? new DOMMatrix(style.transform)
+                    : { m41: 0, m42: 0 };
             x += parent.offsetLeft + matrix.m41;
             y += parent.offsetTop + matrix.m42;
             parent = parent.offsetParent as HTMLElement | null;
